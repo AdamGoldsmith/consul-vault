@@ -1,0 +1,126 @@
+---
+# tasks file for ansible-role-vault-install
+
+- name: Download vault binary ({{ vault_src | basename }})
+  get_url:
+    url: "{{ vault_src }}"
+    checksum: "{{ vault_chksum }}"
+    dest: "/tmp/{{ vault_src | basename }}"
+    force: yes
+    owner: root
+    group: root
+
+- name: Unzip vault binary ({{ vault_src | basename }})
+  unarchive:
+    src: "/tmp/{{ vault_src | basename }}"
+    remote_src: yes
+    dest: "{{ vault_bin_path }}"
+    creates: "{{ vault_bin_path }}/vault"
+    owner: root
+    group: root
+    mode: 0755
+    keep_newer: true
+
+- name: Create vault group
+  group:
+    name: "{{ vault_group }}"
+    state: present
+
+- name: Create vault user
+  user:
+    name: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    comment: "vault systemd service user"
+    home: "{{ vault_path }}"
+    shell: /sbin/nologin
+    system: yes
+    state: present
+    
+- name: Create vault directory structures
+  file:
+    path: "{{ item }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+  with_items:
+    - "{{ vault_conf | dirname }}"
+    - "{{ vault_certs }}"
+    - "{{ vault_data }}"
+
+- name: Installing PIP
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "python-pip"
+
+- name: Upgrade PIP
+  pip:
+    name: pip
+    state: latest
+
+- name: Install python OpenSSL dependencies
+  pip:
+    name: pyOpenSSL
+
+- name: Generate OpenSSL private key pem file
+  openssl_privatekey:
+    path: "{{ vault_privkey }}"
+
+- name: Generate an OpenSSL CSR
+  openssl_csr:
+    path: "{{ vault_csr }}"
+    privatekey_path: "{{ vault_privkey }}"
+    common_name: "{{ vault_cn }}"
+    country_name: "{{ vault_cc }}"
+    organization_name: "{{ vault_on }}"
+
+- name: Generate a Self-Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ vault_certfile }}"
+    privatekey_path: "{{ vault_privkey }}"
+    csr_path: "{{ vault_csr }}"
+    provider: selfsigned
+
+- name: Adjust certificate files ownerships
+  file:
+    path: "{{ vault_certs }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+    recurse: yes
+
+- name: Create vault server configuration
+  template:
+    src: config.j2
+    dest: "{{ vault_conf }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0640
+
+- name: Create vault systemd service config
+  template:
+    src: service.j2
+    dest: "/etc/systemd/system/{{ vault_service }}.service"
+    owner: root
+    group: root
+    mode: 0664
+    force: no
+
+- name: Start and enable vault systemd service
+  systemd:
+    name: "{{ vault_service }}"
+    daemon_reload: yes
+    state: started
+    enabled: yes
+
+- name: Set VAULT_ADDR listener in profile
+  template:
+    src: profile.j2
+    dest: /etc/profile.d/vault.sh
+    owner: root
+    group: root
+    mode: 0755
+

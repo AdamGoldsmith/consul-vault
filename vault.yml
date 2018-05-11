@@ -1,0 +1,10 @@
+---
+
+- name: Install & configure Hashicorp Vault
+  hosts: vault
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - { role: ansible-role-vault-install, tags: install }
+

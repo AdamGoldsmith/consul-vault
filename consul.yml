@@ -1,0 +1,10 @@
+---
+
+- name: Install & configure Hashicorp Consul cluster
+  hosts: consul
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - { role: ansible-role-consul-install, tags: install }
+

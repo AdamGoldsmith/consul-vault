@@ -1,0 +1,26 @@
+---
+# defaults file for ansible-role-vault-install
+
+vault_src: "https://releases.hashicorp.com/vault/0.10.1/vault_0.10.1_linux_amd64.zip"
+vault_chksum: "sha256:031e521b4603487126fd353a9557dd22a02304a8a11f843e9914be59a8009c8a"
+vault_bin_path: "/usr/bin"
+vault_path: "/var/lib/vault"
+vault_data: "{{ vault_path }}/data"
+vault_conf: "/etc/vault/config.hcl"
+vault_certs: "/etc/vault/certs"
+vault_cn: "{{ ansible_fqdn }}"
+vault_cc: "UK"
+vault_on: "Vault"
+vault_privkey: "{{ vault_certs }}/{{ ansible_fqdn | regex_replace('^www\\.', '') }}.pem"
+vault_csr: "{{ vault_certs }}/{{ ansible_fqdn }}.csr"
+vault_certfile: "{{ vault_certs }}/{{ ansible_fqdn | regex_replace('^www\\.', '') }}.crt"
+vault_base_ip: "10.1.42."
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: "8200"
+vault_cluster_port: "8201"
+consul_port: "8500"
+vault_user: "vault"
+vault_group: "vault"
+vault_service: "vault"
+vault_profile: "/etc/profile.d/vault.sh"
+

@@ -1,0 +1,80 @@
+---
+# tasks file for ansible-role-consul-install
+
+- name: Installing dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "unzip"
+
+- name: Download consul binary ({{ consul_src | basename }})
+  get_url:
+    url: "{{ consul_src }}"
+    checksum: "{{ consul_chksum }}"
+    dest: "/tmp/{{ consul_src | basename }}"
+    force: yes
+    owner: root
+    group: root
+
+- name: Unzip consul binary ({{ consul_src | basename }})
+  unarchive:
+    src: "/tmp/{{ consul_src | basename }}"
+    remote_src: yes
+    dest: "{{ consul_bin_path }}"
+    creates: "{{ consul_bin_path }}/consul"
+    owner: root
+    group: root
+    mode: 0755
+    keep_newer: true
+
+- name: Create consul group
+  group:
+    name: "{{ consul_group }}"
+    state: present
+
+- name: Create consul user
+  user:
+    name: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    comment: "consul systemd service user"
+    home: "{{ consul_path }}"
+    shell: /sbin/nologin
+    system: yes
+    state: present
+
+- name: Create consul directory structures
+  file:
+    path: "{{ item }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0750
+    state: directory
+  with_items:
+    - "{{ consul_conf | dirname }}"
+    - "{{ consul_path }}/data"
+
+- name: Create consul agent configuration
+  template:
+    src: "{{ consul_agent_file }}"
+    dest: "{{ consul_conf }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+
+- name: Create consul systemd service config
+  template:
+    src: "{{ consul_service_file }}"
+    dest: "/etc/systemd/system/{{ consul_service }}.service"
+    owner: root
+    group: root
+    mode: 0664
+    force: no
+
+- name: Start and enable consul systemd service
+  systemd:
+    name: "{{ consul_service }}"
+    daemon_reload: yes
+    state: started
+    enabled: yes
+

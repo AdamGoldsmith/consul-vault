@@ -1,0 +1,15 @@
+{
+  "server": false,
+  "node_name": "{{ inventory_hostname }}",
+  "datacenter": "{{ consul_datacenter }}",
+  "data_dir": "{{ consul_path }}/data",
+  "bind_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
+  "client_addr": "127.0.0.1",
+  "retry_join": [{% for host in play_hosts %}
+"{{ consul_base_ip }}10{{ loop.index }}"
+{%- if not loop.last %}, {% endif %}
+{% endfor %}],
+  "log_level": "DEBUG",
+  "enable_syslog": true,
+  "acl_enforce_version_8": false
+}
