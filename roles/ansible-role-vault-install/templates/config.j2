@@ -12,5 +12,5 @@ storage "consul" {
 }
 
 api_addr = "http://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_port }}"
-cluster_addr = "https://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_port }}:{{ vault_cluster_port }}"
+cluster_addr = "https://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_cluster_port }}"
 
