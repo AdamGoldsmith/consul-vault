@@ -1,4 +1,4 @@
-Hashicort vault & consul cluster
+Hashicorp vault & consul cluster
 ================================
 
 Installs & confgures Hashicorp's consul & vault to run as an HA cluster
