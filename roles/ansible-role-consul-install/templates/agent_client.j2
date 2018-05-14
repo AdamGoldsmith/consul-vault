@@ -9,6 +9,7 @@
 "{{ consul_base_ip }}10{{ loop.index }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
+  "encrypt": "{{ consul_secret }}",
   "log_level": "DEBUG",
   "enable_syslog": true,
   "acl_enforce_version_8": false
