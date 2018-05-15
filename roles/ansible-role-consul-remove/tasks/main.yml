@@ -1,0 +1,42 @@
+---
+# tasks file for ansible-role-consul-remove
+
+- name: Stop and disable consul systemd service
+  systemd:
+    name: "{{ consul_service }}"
+    state: stopped
+    enabled: no
+  register: command_result
+  # Prevent Ansible failing when trying to stop a service that doesn't exist
+  failed_when: "command_result is failed and ('find' not in command_result.msg and 'found' not in command_result.msg)"
+
+- name: Delete consul systemd service config
+  file:
+    path: "/etc/systemd/system/{{ consul_service }}.service"
+    state: absent
+
+- name: Delete consul directory structures
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ consul_path }}"
+    - "{{ consul_conf | dirname }}"
+
+- name: Remove consul user
+  user:
+    name: "{{ consul_user }}"
+    state: absent
+    force: yes
+    remove: yes
+
+- name: Remove consul group
+  group:
+    name: "{{ consul_group }}"
+    state: absent
+
+- name: Remove consul binary
+  file:
+    path: "{{ consul_bin_path }}/consul"
+    state: absent
+

@@ -27,12 +27,17 @@ Running the stuff
 vagrant up
 ```
 
-On the Ansible Control Machine
+On the Ansible Control Machine  
+To deploy
 
 ```
-ansible-playbook -i inventory site.yml
+ansible-playbook -i inventory site.yml --skip-tags 'remove,seal'
 ```
+To remove
 
+```
+ansible-playbook -i inventory site.yml --tags 'remove'
+```
 
 Known Issues
 ------------

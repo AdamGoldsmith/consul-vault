@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-role-consul-remove
+
+consul_bin_path: "/usr/bin"
+consul_path: "/var/lib/consul"
+consul_conf: "/etc/consul/consul_agent.hcl"
+consul_user: "consul"
+consul_group: "consul"
+consul_service: "consul"
