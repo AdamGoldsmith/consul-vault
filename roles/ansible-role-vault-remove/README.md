@@ -27,7 +27,7 @@ vault_path: "/var/lib/vault"								# The base vault directory
 vault_conf: "/etc/vault/config.hcl"							# Vault configuration file
 vault_certs: "/etc/vault/certs"								# Vault certificates directory
 vault_user: "vault"									# User to run the vault systemd service
-vault_group: "hashi"									# Group for vault user
+vault_group: "vault"									# Group for vault user
 vault_service: "vault"									# Name of the vault systemd service
 vault_profile: "/etc/profile.d/vault.sh"						# System-wide profile for setting Vault listening address
 audit_path: "/var/log/vault"								# Audit log file directory

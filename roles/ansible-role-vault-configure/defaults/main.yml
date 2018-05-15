@@ -1,0 +1,11 @@
+---
+# defaults file for anisble-role-vault-configure
+
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: "8200"
+vault_user: "vault"
+vault_group: "vault"
+vault_keysfile: "~/.hashicorp_vault_keys.json"
+vault_admintokenfile: "~/.hashicorp_admin_token.json"
+vault_provisionertokenfile: "~/.hashicorp_provisioner_token.json"
+audit_path: "/var/log/vault"
