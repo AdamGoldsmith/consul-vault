@@ -12,6 +12,7 @@
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
   "ui": true,
+  "encrypt": "{{ consul_secret }}",
   "log_level": "DEBUG",
   "enable_syslog": true,
   "acl_enforce_version_8": false
