@@ -1,0 +1,13 @@
+---
+# defaults file for ansible-role-vault-remove
+
+vault_bin_path: "/usr/bin"
+vault_path: "/var/lib/vault"
+vault_conf: "/etc/vault/config.hcl"
+vault_certs: "/etc/vault/certs"
+vault_user: "vault"
+vault_group: "vault"
+vault_service: "vault"
+vault_profile: "/etc/profile.d/vault.sh"
+audit_path: "/var/log/vault"
+

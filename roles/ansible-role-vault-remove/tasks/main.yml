@@ -1,0 +1,49 @@
+---
+# tasks file for ansible-role-vault-remove
+
+- name: Remove VAULT_ADDR profile
+  file:
+    path: /etc/profile.d/vault.sh
+    state: absent
+
+- name: Stop and disable vault service
+  systemd:
+    name: "{{ vault_service }}"
+    state: stopped
+    enabled: no
+  register: command_result
+  # Prevent Ansible failing when trying to stop a service that doesn't exist
+  failed_when: "command_result is failed and ('find' not in command_result.msg and 'found' not in command_result.msg)"
+
+- name: Delete vault systemd service config
+  file:
+    path: "/etc/systemd/system/{{ vault_service }}.service"
+    state: absent
+
+- name: Delete vault server directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ vault_path }}"
+    - "{{ vault_certs }}"
+    - "{{ vault_conf | dirname }}"
+    - "{{ audit_path }}"
+
+- name: Remove vault user
+  user:
+    name: "{{ vault_user }}"
+    state: absent
+    force: yes
+    remove: yes
+    
+- name: Remove vault group
+  group:
+    name: "{{ vault_group }}"
+    state: absent
+
+- name: Remove vault binary
+  file:
+    path: "{{ vault_bin_path }}/vault"
+    state: absent
+

@@ -1,0 +1,13 @@
+---
+# defaults file for anisble-role-vault-init
+
+vault_path: "/var/lib/vault"
+vault_data: "{{ vault_path }}/data"
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: "8200"
+vault_certs: "/etc/vault/certs"
+vault_certfile: "{{ vault_certs }}/{{ansible_fqdn | regex_replace('^www\\.', '') }}.crt"
+vault_user: "vault"
+vault_group: "vault"
+vault_service: "vault"
+vault_keysfile: "~/.hashicorp_vault_keys.json"
