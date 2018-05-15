@@ -1,0 +1,28 @@
+---
+# tasks file for ansible-role-vault-unseal
+
+- name: Start vault systemd service
+  systemd:
+    name: "{{ vault_service }}"
+    state: started
+
+- name: Retrieve keys locally
+  set_fact:
+    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
+  delegate_to: localhost
+  become: no
+
+- name: Unseal vault
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/unseal"
+    validate_certs: no
+    method: PUT
+    body: "{ 'key':'{{ item }}' }"
+    body_format: json
+    return_content: yes
+    status_code: 200
+  # Pick threshold number of random keys from keys list
+  with_items: "{{ (vault_keys['keys'] | shuffle) [:key_threshold] }}"
+  become: no
+  no_log: yes
+

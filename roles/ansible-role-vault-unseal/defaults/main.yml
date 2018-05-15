@@ -1,0 +1,8 @@
+---
+# defaults file for anisble-role-vault-unseal
+
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: "8200"
+vault_service: "vault"
+vault_keysfile: "~/.hashicorp_vault_keys.json"
+key_threshold: 3

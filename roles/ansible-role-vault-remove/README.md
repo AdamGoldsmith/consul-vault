@@ -61,5 +61,5 @@ BSD
 Author Information
 ------------------
 
-Adam Goldsmith (adam.goldsmith@accenture.com)
+Adam Goldsmith
 
