@@ -54,7 +54,7 @@
     - "{{ consul_conf | dirname }}"
     - "{{ consul_path }}/data"
 
-- name: Generate random 16-bit base64 whisper encryption string
+- name: Generate random 16-bit base64 gossip encryption string
   set_fact:
     consul_secret: "{{ lookup('password', '/dev/null length=22 chars=ascii_letters,digits,+,/')}}=="
   run_once: yes
