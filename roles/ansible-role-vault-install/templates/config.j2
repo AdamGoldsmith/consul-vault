@@ -1,3 +1,5 @@
+ui=true
+
 listener "tcp" {
   address          = "0.0.0.0:{{ vault_port }}"
   cluster_address  = "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_cluster_port }}"
