@@ -8,11 +8,12 @@ Unseal Hashicorp's vault by
 
 Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS
+* Debian/Stretch64
 
 Requirements
 ------------
 
-Ansible 2.4 or higher
+Ansible 2.5 or higher
 
 Role Variables
 --------------
