@@ -50,7 +50,7 @@
 
 - name: Installing PIP
   package:
-    name: "{{ python-pip }}"
+    name: python-pip
     state: present
 
 - name: Upgrade PIP
