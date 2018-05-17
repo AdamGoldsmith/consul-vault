@@ -3,9 +3,12 @@ Hashicorp vault & consul cluster
 
 Installs & confgures Hashicorp's consul & vault to run as an HA cluster
 
+Although the vault installation creates OpenSSL TLS private key, CSR & resultant certificate, the URI modules in these roles currently use "validate_certs: no". It is up to you to complete the TLS configuration.
+
 Heavily based on the documentation supplied by HashiCorp at <https://www.vaultproject.io/guides/operations/vault-ha-consul.html>
 
 Currently tested on these Operating Systems
+* Oracle Linux/RHEL/CentOS 7
 * Debian/Stretch64
 
 Requirements
