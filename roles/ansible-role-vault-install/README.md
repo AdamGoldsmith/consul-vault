@@ -83,7 +83,7 @@ In order to prevent this happening, temporarily move the directory "/usr/lib64/p
 License
 -------
 
-BSD
+MIT License
 
 Author Information
 ------------------
