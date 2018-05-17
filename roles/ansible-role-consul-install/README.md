@@ -17,7 +17,7 @@ Heavily based on the documentation supplied by HashiCorp at <https://www.vaultpr
 Requirements
 ------------
 
-Ansible 2.5 or higher
+* Ansible 2.5 or higher
 
 Role Variables
 --------------

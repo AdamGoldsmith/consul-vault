@@ -50,10 +50,8 @@
 
 - name: Installing PIP
   package:
-    name: "{{ item }}"
+    name: "{{ python-pip }}"
     state: present
-  loop:
-    - "python-pip"
 
 - name: Upgrade PIP
   pip:

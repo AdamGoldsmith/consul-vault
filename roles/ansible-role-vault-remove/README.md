@@ -16,7 +16,7 @@ Currently tested on these Operating Systems
 Requirements
 ------------
 
-Ansible 2.5 or higher
+* Ansible 2.5 or higher
 
 Role Variables
 --------------

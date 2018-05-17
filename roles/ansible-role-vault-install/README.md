@@ -18,9 +18,13 @@ Currently tested on these Operating Systems
 Requirements
 ------------
 
-Ansible 2.5 or higher
-pyOpenSSL 0.17 or higher (see Known Issues section below)
-Backend consul cluster (role: ansible-role-consul-install)
+* Ansible 2.5 or higher
+* pyOpenSSL 0.17 or higher (see Known Issues section below)
+* Backend consul cluster (role: ansible-role-consul-install)
+* __Centos__ : Enable EPEL repository
+
+   EPEL is not enabled in this role, try Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>)
+
 
 Role Variables
 --------------
