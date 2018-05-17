@@ -1,0 +1,55 @@
+---
+# tasks file for ansible-role-vault-approle
+
+- name: Retrieve keys locally
+  set_fact:
+    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
+  delegate_to: localhost
+  become: no
+
+- name: Enable approle auth method
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/auth/approle"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','approle_params.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "path is already in use" message appears
+  failed_when: "result.status != 204 and 'path is already in use' not in result.content"
+  run_once: yes
+
+- name: Create {{ approle_name }} policy
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/{{ approle_name }}"
+    validate_certs: no
+    method: PUT
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+# This simple line took me 2 days to get working, I felt that needed mentioning!
+    body: { "policy": "{{ lookup('template','policy-approle.hcl.j2') }}" }
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  run_once: yes
+
+- name: Create {{ approle_name }} role
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/auth/approle/role/{{ approle_name }}"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','role_approle.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  run_once: yes
+

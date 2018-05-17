@@ -1,0 +1,8 @@
+# Login with AppRole
+path "auth/approle/login" {
+  capabilities = [ "create", "read" ]
+}
+
+path "secret/{{ approle_name }}/*" {
+  capabilities = [ "create", "read", "update", "delete" ]
+}

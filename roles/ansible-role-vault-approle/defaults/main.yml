@@ -1,0 +1,12 @@
+---
+# defaults file for anisble-role-vault-approle
+
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: "8200"
+vault_keysfile: "~/.hashicorp_vault_keys.json"
+vault_base_ip: "10.1.42."
+approle_name: "approle"
+def_lease_ttl: "10m"
+max_lease_ttl: "20m"
+token_ttl: "10m"
+max_token_ttl: "15m"

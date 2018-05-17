@@ -1,0 +1,12 @@
+{
+  "token_ttl": "{{ token_ttl }}",
+  "token_max_ttl": "{{ max_token_ttl }}",
+  "policies": [
+    "{{ approle_name }}"
+  ],
+  "bound_cidr_list": [
+    "{{ vault_base_ip }}0/24"
+  ],
+  "period": 0,
+  "bind_secret_id": true
+}
