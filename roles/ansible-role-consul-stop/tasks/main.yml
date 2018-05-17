@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-role-consul-stop
+
+- name: Stop consul systemd service
+  systemd:
+    name: "{{ consul_service }}"
+    state: stopped
+

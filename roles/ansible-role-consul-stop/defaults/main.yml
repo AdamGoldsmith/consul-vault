@@ -1,0 +1,4 @@
+---
+# defaults file for anisble-role-consul-stop
+
+consul_service: "consul"

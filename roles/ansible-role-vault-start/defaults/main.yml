@@ -1,0 +1,4 @@
+---
+# defaults file for anisble-role-vault-start
+
+vault_service: vault

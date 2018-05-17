@@ -8,4 +8,7 @@
   roles:
     - { role: ansible-role-consul-remove, tags: remove }
     - { role: ansible-role-consul-install, tags: install }
+    - { role: ansible-role-consul-start, tags: start }
+    - { role: ansible-role-consul-stop, tags: stop }
+
 

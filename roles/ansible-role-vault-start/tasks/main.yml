@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-role-vault-start
+
+- name: Start vault systemd service
+  systemd:
+    name: "{{ vault_service }}"
+    state: started
+

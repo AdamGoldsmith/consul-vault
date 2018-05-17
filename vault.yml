@@ -8,9 +8,10 @@
   roles:
     - { role: ansible-role-vault-remove, tags: remove }
     - { role: ansible-role-vault-install, tags: install }
+    - { role: ansible-role-vault-start, tags: start }
     - { role: ansible-role-vault-init, tags: init }
     - { role: ansible-role-vault-unseal, tags: unseal }
     - { role: ansible-role-vault-configure, tags: configure }
     - { role: ansible-role-vault-approle, tags: approle }
-#    - { role: ansible-role-vault-seal, tags: seal }
+    - { role: ansible-role-vault-stop, tags: stop }
 

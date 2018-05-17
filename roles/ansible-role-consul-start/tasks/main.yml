@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-role-consul-start
+
+- name: Start consul systemd service
+  systemd:
+    name: "{{ consul_service }}"
+    state: started
+
