@@ -9,6 +9,7 @@ Removes Hashicorp's Consul by
 * Deleting the consul binary from /usr/bin
 
 Currently tested on these Operating Systems
+* Oracle Linux/RHEL/CentOS 7
 * Debian/Stretch64
 
 Requirements

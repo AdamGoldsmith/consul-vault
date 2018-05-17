@@ -9,6 +9,7 @@ Installs Hashicorp's Consul by
 * Starting & enabling consul systemd service
 
 Currently tested on these Operating Systems
+* Oracle Linux/RHEL/CentOS 7
 * Debian/Stretch64
 
 Heavily based on the documentation supplied by HashiCorp at <https://www.vaultproject.io/guides/operations/vault-ha-consul.html>
