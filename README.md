@@ -8,7 +8,7 @@ Although the vault installation creates OpenSSL TLS private key, CSR & resultant
 Heavily based on the documentation supplied by HashiCorp at <https://www.vaultproject.io/guides/operations/vault-ha-consul.html>
 
 Currently tested on these Operating Systems
-* Oracle Linux/RHEL/CentOS 7
+* Oracle Linux/RHEL/CentOS 7 (Note: Enables EPEL repo using Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>)
 * Debian/Stretch64
 
 Requirements
@@ -34,7 +34,7 @@ On the Ansible Control Machine
 To deploy
 
 ```
-ansible-playbook -i inventory site.yml --skip-tags 'remove,seal'
+ansible-playbook -i inventory site.yml --skip-tags 'remove,stop'
 ```
 To remove
 

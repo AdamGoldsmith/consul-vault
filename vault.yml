@@ -7,6 +7,7 @@
 
   roles:
     - { role: ansible-role-vault-remove, tags: remove }
+    - { role: ansible-role-repo-epel, when: ansible_os_family == 'RedHat', tags: epel }
     - { role: ansible-role-vault-install, tags: install }
     - { role: ansible-role-vault-start, tags: start }
     - { role: ansible-role-vault-init, tags: init }
