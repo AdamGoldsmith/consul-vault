@@ -18,7 +18,7 @@ Role Variables
 
 defaults/main.yml
 ```
-consul_service: vault		# Name of the consul systemd service
+consul_service: consul		# Name of the consul systemd service
 ```
 
 Dependencies
