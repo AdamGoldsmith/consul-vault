@@ -8,7 +8,7 @@ Although the vault installation creates OpenSSL TLS private key, CSR & resultant
 Heavily based on the documentation supplied by HashiCorp at <https://www.vaultproject.io/guides/operations/vault-ha-consul.html>
 
 Currently tested on these Operating Systems
-* Oracle Linux/RHEL/CentOS 7 (Note: Enables EPEL repo using Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>)
+* Oracle Linux/RHEL/CentOS 7 (Note: Enables EPEL repo using Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>))
 * Debian/Stretch64
 
 Requirements
@@ -26,7 +26,7 @@ Dependencies
 Getting the code
 ----------------
 
-git clone https://github.com/AdamGoldsmith/consul-vault.git --recurse-submodules
+`git clone https://github.com/AdamGoldsmith/consul-vault.git --recurse-submodules`
 
 Running the deployment
 ----------------------
