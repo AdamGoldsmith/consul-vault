@@ -19,3 +19,6 @@ vault-s1 ansible_host=10.1.42.201 ansible_user=vagrant
 vault-s2 ansible_host=10.1.42.202 ansible_user=vagrant
 vault-s3 ansible_host=10.1.42.203 ansible_user=vagrant
 
+[all:vars]
+ansible_ssh_common_args='-o "UserKnownHostsFile /dev/null"'
+
