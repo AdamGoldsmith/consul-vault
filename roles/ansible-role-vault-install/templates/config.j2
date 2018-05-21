@@ -10,7 +10,7 @@ listener "tcp" {
 
 storage "consul" {
   address = "127.0.0.1:{{ consul_port }}"
-  path    = "{{ vault_data }}/"
+  path    = "{{ vault_service }}/"
 }
 
 api_addr = "http://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_port }}"

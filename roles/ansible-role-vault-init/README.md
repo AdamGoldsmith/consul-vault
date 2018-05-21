@@ -23,8 +23,6 @@ Role Variables
 
 defaults/main.yml
 ```
-vault_path: "/var/lib/vault"									# The base vault directory
-vault_data: "{{ vault_path }}/data"								# Vault's data directory (using 'file' backend storage)
 vault_addr: "{{ ansible_fqdn }}"								# Vault listener address
 vault_port: "8200"										# Vault listener port
 vault_certs: "/etc/vault/certs"									# Vault certificates directory

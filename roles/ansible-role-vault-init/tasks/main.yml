@@ -1,24 +1,6 @@
 ---
 # tasks file for ansible-role-vault-init
 
-- name: Stop vault systemd service
-  systemd:
-    name: "{{ vault_service }}"
-    state: stopped
-
-- name: Remove vault data directory
-  file:
-    path: "{{ vault_data }}"
-    state: absent
-
-- name: Recreate vault data directory
-  file:
-    path: "{{ vault_data }}"
-    owner: "{{ vault_user }}"
-    group: "{{ vault_group }}"
-    mode: 0750
-    state: directory
-
 - name: Start vault systemd service
   systemd:
     name: "{{ vault_service }}"
