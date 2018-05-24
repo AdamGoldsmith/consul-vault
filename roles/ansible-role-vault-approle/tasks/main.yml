@@ -6,6 +6,7 @@
     vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
   delegate_to: localhost
   become: no
+  run_once: yes
 
 - name: Enable approle auth method
   uri:
