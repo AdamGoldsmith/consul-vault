@@ -34,8 +34,6 @@ defaults/main.yml
 vault_src: "https://releases.hashicorp.com/vault/0.10.1/vault_0.10.1_linux_amd64.zip"	# Version of vault to download from Hashicorp's website
 vault_chksum: "sha256:031e521b4603487126fd353a9557dd22a02304a8a11f843e9914be59a8009c8a"	# Vault download file checksum
 vault_bin_path: "/usr/bin"								# Path to install vault binary
-vault_path: "/var/lib/vault"								# The base vault directory
-vault_data: "{{ vault_path }}/data"							# Vault's data directory (using 'file' backend storage)
 vault_conf: "/etc/vault/config.hcl"							# Vault configuration file
 vault_certs: "/etc/vault/certs"								# Vault certificates directory
 vault_cn: "{{ ansible_fqdn }}"								# CSR Common Name

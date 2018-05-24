@@ -24,7 +24,6 @@ Role Variables
 defaults/main.yml
 ```
 vault_bin_path: "/usr/bin"								# Path to install vault binary
-vault_path: "/var/lib/vault"								# The base vault directory
 vault_conf: "/etc/vault/config.hcl"							# Vault configuration file
 vault_certs: "/etc/vault/certs"								# Vault certificates directory
 vault_user: "vault"									# User to run the vault systemd service

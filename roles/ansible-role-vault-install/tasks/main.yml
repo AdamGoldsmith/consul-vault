@@ -31,7 +31,6 @@
     name: "{{ vault_user }}"
     group: "{{ vault_group }}"
     comment: "vault systemd service user"
-    home: "{{ vault_path }}"
     shell: /sbin/nologin
     system: yes
     state: present
@@ -46,7 +45,6 @@
   with_items:
     - "{{ vault_conf | dirname }}"
     - "{{ vault_certs }}"
-    - "{{ vault_data }}"
 
 - name: Installing PIP
   package:
