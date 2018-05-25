@@ -1,0 +1,129 @@
+---
+# tasks file for ansible-role-vault-sshkeysign
+
+- name: Retrieve keys locally
+  set_fact:
+    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
+  delegate_to: localhost
+  become: no
+  run_once: yes
+
+- name: Enable SSH engine at {{ ssh_client }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/mounts/{{ ssh_client }}"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "existing mount at" message appears
+  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  run_once: yes
+
+- name: Generate CA for {{ ssh_client }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/{{ ssh_client }}/config/ca"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','ca_config.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 200
+  become: no
+  register: result
+  # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
+  failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
+  run_once: yes
+
+- name: Create role for signing client public SSH keys {{ sshrole_name }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/{{ ssh_client }}/roles/ssh-client-role"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','sshrole_params.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "path is already in use" message appears
+  failed_when: "result.status != 204 and 'path is already in use' not in result.content"
+  run_once: yes
+
+- name: Enable SSH engine at {{ ssh_host }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/mounts/{{ ssh_host }}"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "existing mount at" message appears
+  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  run_once: yes
+
+- name: Tune SSH engine at {{ ssh_host }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/mounts/{{ ssh_host }}/tune"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','ssh_host_tune.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "existing mount at" message appears
+  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  run_once: yes
+
+- name: Generate CA for {{ ssh_host }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/{{ ssh_host }}/config/ca"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','ca_config.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 200
+  become: no
+  register: result
+  # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
+  failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
+  run_once: yes
+
+- name: Create role for signing host public SSH keys {{ hostrole_name }}
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/{{ ssh_host }}/roles/ssh-host-role"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+    body: "{{ lookup('template','hostrole_params.json.j2') }}"
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  register: result
+  # Don't fail if "path is already in use" message appears
+  failed_when: "result.status != 204 and 'path is already in use' not in result.content"
+  run_once: yes
+

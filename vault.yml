@@ -14,5 +14,6 @@
     - { role: ansible-role-vault-unseal, tags: unseal }
     - { role: ansible-role-vault-configure, tags: configure }
     - { role: ansible-role-vault-approle, tags: approle }
+    - { role: ansible-role-vault-sshkeysign, tags: sshkeysign }
     - { role: ansible-role-vault-stop, tags: stop }
 
