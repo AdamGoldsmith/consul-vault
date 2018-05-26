@@ -14,7 +14,7 @@ Examples\n
 
    ./deploy.sh
 
-   Equivalent to running \"ansible-playbook -i inventory site.yml --tags 'epel,install,init,unseal,configure,approle'\"
+   Equivalent to running \"ansible-playbook -i inventory site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'\"
 
 2) Stop consul service on all consul hosts
 
@@ -39,7 +39,7 @@ do
   esac
 done 2>/dev/null
 
-cmd="ansible-playbook -i inventory ${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle}'"
+cmd="ansible-playbook -i inventory ${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle,sshkeysign}'"
 
 printf "\n${cmd}\n"
 eval ${cmd}
