@@ -3,6 +3,8 @@ Hashicorp vault & consul cluster
 
 Installs & confgures Hashicorp's consul & vault to run as an HA cluster
 
+[![Alt text](/images/Consul-Vault-UI.jpg)](https://www.consul.io/docs/index.html)
+
 Although the vault installation creates OpenSSL TLS private key, CSR & resultant certificate, the URI modules in these roles currently use "validate_certs: no". It is up to you to complete the TLS configuration.
 
 > __WARNING__ - When vault is initialized, the master key shards & root token are stored in the ansible user's HOME dir on the Ansible control machine. This is __NOT__ good practice, but was used to get things running. I am considering various future options that won't break the non-interactive execution of the playbooks, such as ansible vault'ing the file with a pre-defined ansible vault password file. But this is really no more secure than the current setup. Hashicorp vault has the ability to encrypt the master key shards using [PGP, GPG, and Keybase](<https://www.vaultproject.io/docs/concepts/pgp-gpg-keybase.html>). This is the ideal solution but might prove too difficult to implement while maintaining non-interactive playbook execution.
