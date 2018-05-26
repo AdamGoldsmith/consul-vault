@@ -1,8 +1,8 @@
 ---
 # defaults file for ansible-role-consul-install
 
-consul_src: "https://releases.hashicorp.com/consul/1.0.7/consul_1.0.7_linux_amd64.zip"
-consul_chksum: "sha256:6c2c8f6f5f91dcff845f1b2ce8a29bd230c11397c448ce85aae6dacd68aa4c14"
+consul_src: "https://releases.hashicorp.com/consul/1.1.0/consul_1.1.0_linux_amd64.zip"
+consul_chksum: "sha256:09c40c8b5be868003810064916d8460bff334ccfb59a5046390224b27e052c45"
 consul_bin_path: "/usr/bin"
 consul_path: "/var/lib/consul"
 consul_conf: "/etc/consul/consul_agent.hcl"
