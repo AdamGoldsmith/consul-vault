@@ -19,6 +19,7 @@ User={{ consul_user }}
 Group={{ consul_group }}
 PIDFile=/var/run/{{ consul_service }}/{{ consul_service }}.pid
 PermissionsStartOnly=true
+Environment=CONSUL_UI_BETA=true
 ExecStartPre=-/bin/mkdir -p /var/run/{{ consul_service }}
 ExecStartPre=/bin/chown -R {{ consul_user }}:{{ consul_group }} /var/run/{{ consul_service }}
 ExecStart={{ consul_bin_path }}/consul agent \
