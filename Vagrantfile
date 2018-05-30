@@ -49,19 +49,19 @@ servers=[
     :ram => 512
   },
   {
-    :hostname => "consul-c1" + DOMAIN,
+    :hostname => "vault-s1" + DOMAIN,
     :ip => INTERNAL_NET + "201",
     :ssh_port => "22201",
     :ram => 512
   },
   {
-    :hostname => "consul-c2" + DOMAIN,
+    :hostname => "vault-s2" + DOMAIN,
     :ip => INTERNAL_NET + "202",
     :ssh_port => "22202",
     :ram => 512
   },
   {
-    :hostname => "consul-c3" + DOMAIN,
+    :hostname => "vault-s3" + DOMAIN,
     :ip => INTERNAL_NET + "203",
     :ssh_port => "22203",
     :ram => 512
