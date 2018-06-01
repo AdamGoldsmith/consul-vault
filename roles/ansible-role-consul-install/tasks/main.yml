@@ -31,12 +31,14 @@
 - name: Create consul group
   group:
     name: "{{ consul_group }}"
+    gid: "{{ consul_gid }}"
     state: present
 
 - name: Create consul user
   user:
     name: "{{ consul_user }}"
     group: "{{ consul_group }}"
+    uid: "{{ consul_uid }}"
     comment: "consul systemd service user"
     home: "{{ consul_path }}"
     shell: /sbin/nologin

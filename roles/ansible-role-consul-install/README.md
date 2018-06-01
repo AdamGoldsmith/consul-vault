@@ -34,7 +34,9 @@ consul_service_file: "service_server.j2"							# Consul service configuration te
 consul_datacenter: "dc1"									# Consul datacenter name
 consul_base_ip: "10.1.42."									# Consul subnet
 consul_user: "consul"										# User to run the consul systemd service
+consul_uid: "8501"										# UID of consul user
 consul_group: "consul"										# Group for consul user
+consul_gid: "8501"										# GID of consul group
 consul_service: "consul"									# Name of the consul systemd service
 ```
 

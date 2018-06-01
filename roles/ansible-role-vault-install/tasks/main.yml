@@ -24,12 +24,14 @@
 - name: Create vault group
   group:
     name: "{{ vault_group }}"
+    gid: "{{ vault_gid }}"
     state: present
 
 - name: Create vault user
   user:
     name: "{{ vault_user }}"
     group: "{{ vault_group }}"
+    uid: "{{ vault_uid }}"
     comment: "vault systemd service user"
     shell: /sbin/nologin
     system: yes
