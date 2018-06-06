@@ -1,0 +1,126 @@
+---
+# tasks file for ansible-role-haproxy-install
+
+- name: Load a variable file based on the OS type
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int}}.yml"
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/{{ ansible_os_family }}.yml"
+    - "../vars/default.yml"
+  when: systemd_libs is not defined
+
+- name: Installing dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ compiler }}"
+    - "{{ pcre_libs }}"
+    - "{{ pcre_libs_dev }}"
+    - "{{ systemd_libs_dev }}"
+
+- name: Download haproxy source code ({{ haproxy_src | basename }})
+  get_url:
+    url: "{{ haproxy_src }}"
+    checksum: "{{ haproxy_chksum }}"
+    dest: "/tmp/{{ haproxy_src | basename }}"
+    force: yes
+    owner: root
+    group: root
+
+- name: Unzip haproxy source code ({{ haproxy_src | basename }})
+  unarchive:
+    src: "/tmp/{{ haproxy_src | basename }}"
+    remote_src: yes
+    dest: "/tmp/"
+    owner: root
+    group: root
+    mode: 0755
+    keep_newer: true
+
+- name: Compile haproxy from source
+  make:
+    chdir: /tmp/{{ haproxy_src | basename | replace('.tar.gz', '') }}
+    params:
+      TARGET: linux2628
+      USE_SYSTEMD: 1
+
+- name: Create haproxy group
+  group:
+    name: "{{ haproxy_group }}"
+    gid: "{{ haproxy_gid }}"
+    state: present
+
+- name: Create haproxy user
+  user:
+    name: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    uid: "{{ haproxy_uid }}"
+    comment: "HAProxy service user"
+    shell: /sbin/nologin
+    system: yes
+    state: present
+    
+- name: Create haproxy directory structures
+  file:
+    path: "{{ item }}"
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: 0750
+    state: directory
+  with_items:
+    - "{{ haproxy_conf | dirname }}"
+
+- name: Copy haproxy binary into directory
+  copy:
+    src: /tmp/{{ haproxy_src | basename | replace('.tar.gz', '') }}/haproxy
+    dest: "{{ haproxy_bin_path }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create haproxy systemd service config
+  template:
+    src: service.j2
+    dest: "/etc/systemd/system/{{ haproxy_service }}.service"
+    owner: root
+    group: root
+    mode: 0664
+    force: no
+
+- name: Create HAProxy configuration
+  template:
+    src: haproxy_conf.j2
+    dest: "{{ haproxy_conf }}"
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: 0640
+
+- name: Create consul services configuration file
+  template:
+    src: consul_services.j2
+    dest: "{{ consul_services_conf }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+  notify: restart consul
+
+- name: keepalived
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "keepalived"
+
+- name: Start and enable HAProxy & keepalived services
+  systemd:
+    name: "{{ item }}"
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  with_items:
+    - "haproxy"
+    - "keepalived"
+

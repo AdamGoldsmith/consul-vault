@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-role-haproxy-stop
+
+- name: Stop keepalived & HAProxy systemd services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - "{{ keepalived_service }}"
+    - "{{ haproxy_service }}"
+

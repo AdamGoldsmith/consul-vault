@@ -1,0 +1,23 @@
+---
+# defaults file for ansible-role-haproxy-install
+
+haproxy_src: "http://www.haproxy.org/download/1.8/src/haproxy-1.8.9.tar.gz"
+haproxy_chksum: "md5:1466cf8c1c036e376265b86df43efc89"
+haproxy_bin_path: "/usr/bin"
+haproxy_conf: "/etc/haproxy/haproxy.cfg"
+haproxy_mc: "2000"
+haproxy_pid: "/var/run/haproxy/haproxy.pid"
+haproxy_sock: "/var/run/haproxy/haproxy.sock"
+haproxy_service: "haproxy"
+haproxy_user: "haproxy"
+haproxy_uid: "8801"
+haproxy_group: "haproxy"
+haproxy_gid: "8801"
+consul_dns_port: "8600"
+vault_port: "8200"
+max_vault_servers: "3"
+consul_services_conf: "/etc/consul/consul_services.hcl"
+consul_service: "consul"
+consul_user: "consul"
+consul_group: "consul"
+

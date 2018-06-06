@@ -1,0 +1,10 @@
+{
+  "service": {
+    "name": "{{ haproxy_service }}",
+    "port": {{ vault_port }},
+    "check": {
+      "http": "http://127.0.0.1:{{ vault_port }}",
+      "interval": "10s"
+    }
+  }
+}

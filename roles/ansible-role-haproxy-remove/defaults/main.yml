@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-role-haproxy-remove
+
+haproxy_bin_path: "/usr/bin"
+haproxy_conf: "/etc/haproxy/haproxy.cfg"
+haproxy_user: "haproxy"
+haproxy_group: "haproxy"
+haproxy_service: "haproxy"
