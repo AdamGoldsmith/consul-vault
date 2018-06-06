@@ -25,7 +25,6 @@ Requirements
 
    EPEL is not enabled in this role, try Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>)
 
-
 Role Variables
 --------------
 
@@ -48,7 +47,9 @@ vault_port: "8200"									# Vault listener port
 vault_cluster_port: "8201"								# Vault cluster port
 consul_port: "8500"									# Consul listener port
 vault_user: "vault"									# User to run the vault systemd service
+vault_uid: "8201"									# UID of vault user
 vault_group: "vault"									# Group for vault user
+vault_gid: "8201"									# GID of vault group
 vault_service: "vault"									# Name of the vault systemd service
 vault_profile: "/etc/profile.d/vault.sh"						# System-wide profile for setting Vault listening address
 ```

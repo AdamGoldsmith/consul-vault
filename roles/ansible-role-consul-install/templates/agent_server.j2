@@ -6,9 +6,9 @@
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
-  "bootstrap_expect": {{ play_hosts | length }},
-  "retry_join": [{% for host in play_hosts %}
-"{{ consul_base_ip }}10{{ loop.index }}"
+  "bootstrap_expect": {{ groups['consul-server'] | length }},
+  "retry_join": [{% for host in groups['consul-server'] %}
+"{{ consul_base_ip }}{{ 100 + loop.index }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
   "ui": true,

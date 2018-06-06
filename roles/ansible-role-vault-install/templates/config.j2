@@ -3,7 +3,7 @@ ui=true
 listener "tcp" {
   address          = "0.0.0.0:{{ vault_port }}"
   cluster_address  = "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', vault_base_ip) | list | first }}:{{ vault_cluster_port }}"
-  tls_disable      = "false"
+  tls_disable      = "{{ tls_disable }}"
   tls_key_file     = "{{ vault_privkey }}"
   tls_cert_file    = "{{ vault_certfile }}"
 }

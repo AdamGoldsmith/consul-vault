@@ -11,6 +11,8 @@ consul_service_file: "service_server.j2"
 consul_datacenter: "dc1"
 consul_base_ip: "10.1.42."
 consul_user: "consul"
+consul_uid: "8501"
 consul_group: "consul"
+consul_gid: "8501"
 consul_service: "consul"
 

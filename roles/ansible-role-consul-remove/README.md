@@ -1,8 +1,8 @@
 Role : ansible-role-consul-remove
-==================================
+=================================
 
 Removes Hashicorp's Consul by
-* Stopping & disabline consul systemd service
+* Stopping & disabling consul systemd service
 * Deleting consul systemd service
 * Deleting the consul directory structure
 * Removing the consul group & user
@@ -41,7 +41,7 @@ Example Playbook
 ```
 ---
 
-- name: Install Hashicorp Consul
+- name: Remove Hashicorp Consul
   hosts: consul
   become: yes
 
