@@ -1,0 +1,13 @@
+---
+
+- name: Install & configure HAProxy & keepalived
+  hosts: haproxy
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - { role: ansible-role-haproxy-remove, tags: remove }
+    - { role: ansible-role-haproxy-install, tags: install }
+    - { role: ansible-role-haproxy-start, tags: start }
+    - { role: ansible-role-haproxy-stop, tags: stop }
+

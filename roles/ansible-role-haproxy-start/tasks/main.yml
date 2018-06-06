@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-role-haproxy-start
+
+- name: Start HAProxy & keepalived systemd services
+  systemd:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - "{{ haproxy_service }}"
+    - "{{ keepalived_service }}"
+

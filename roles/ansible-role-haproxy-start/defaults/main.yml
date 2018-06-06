@@ -1,0 +1,5 @@
+---
+# defaults file for anisble-role-haproxy-start
+
+haproxy_service: "haproxy"
+keepalived_service: "keepalived"

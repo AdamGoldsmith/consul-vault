@@ -1,0 +1,35 @@
+global
+  maxconn {{ haproxy_mc }}
+  pidfile {{ haproxy_pid }}
+  log     127.0.0.1 local0
+  log     127.0.0.1 local1 notice
+
+  # echo "" | nc -U /var/run/haproxy.sock
+  stats   socket {{ haproxy_sock }} mode 777
+
+resolvers consul-dns
+  nameserver consul 127.0.0.1:{{ consul_dns_port }}
+  resolve_retries 3
+  hold valid 100ms
+
+defaults
+    log         global
+    mode        tcp
+    option      dontlognull
+    retries     3
+    timeout     check    5s
+    timeout     client   5s
+    timeout     connect  10s
+    timeout     server   10s
+    # if not initialized, haproxy fails at configuration
+    default-server init-addr none
+
+frontend vault
+  bind   *:{{ vault_port }}
+  option tcplog
+  tcp-request inspect-delay 2s
+  default_backend vaultservice
+
+backend vaultservice
+  server-template vault {{ max_vault_servers }} vault.service.consul:{{ vault_port }} inter 1s resolvers consul-dns resolve-prefer ipv4 check
+

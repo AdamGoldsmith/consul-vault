@@ -1,3 +1,7 @@
+[haproxy]
+haproxy-s1 ansible_host=10.1.42.11 ansible_user=vagrant
+haproxy-s2 ansible_host=10.1.42.12 ansible_user=vagrant
+
 [consul-server]
 consul-s1 ansible_host=10.1.42.101 ansible_user=vagrant
 consul-s2 ansible_host=10.1.42.102 ansible_user=vagrant
@@ -12,6 +16,7 @@ vault-s3 ansible_host=10.1.42.203 ansible_user=vagrant
 
 [consul-client:children]
 vault
+haproxy
 
 [consul:children]
 consul-server

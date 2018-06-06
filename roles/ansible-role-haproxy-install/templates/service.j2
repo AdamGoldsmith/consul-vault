@@ -1,0 +1,33 @@
+### BEGIN INIT INFO
+# Provides:          {{ haproxy_service }}
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: HAProxy load-balancer
+# Description:       HAProxy load-balancer {{ haproxy_src | basename | replace('.tar.gz', '') }}
+### END INIT INFO
+
+[Unit]
+Description=HAProxy Load Balancer {{ haproxy_src | basename | replace('.tar.gz', '') }}
+Documentation=http://www.haproxy.org/#docs
+Requires=network-online.target
+After=network.target
+
+[Service]
+User={{ haproxy_user }}
+Group={{ haproxy_group }}
+Environment="CONFIG={{ haproxy_conf }}" "PIDFILE={{ haproxy_pid }}"
+PermissionsStartOnly=true
+ExecStartPre=-/bin/mkdir -p /var/run/{{ haproxy_service }}
+ExecStartPre=/bin/chown -R {{ haproxy_user }}:{{ haproxy_group }} /var/run/{{ haproxy_service }}
+ExecStartPre={{ haproxy_bin_path }}/haproxy -f $CONFIG -c -q
+ExecStart={{ haproxy_bin_path }}/haproxy -Ws -f $CONFIG -p $PIDFILE
+ExecReload={{ haproxy_bin_path }}/haproxy -f $CONFIG -c -q
+ExecReload=/bin/kill -USR2 $MAINPID
+KillMode=mixed
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

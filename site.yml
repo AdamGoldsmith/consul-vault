@@ -1,9 +1,11 @@
 ---
 
-- name: Install & configure Hashicorp Consul cluster + Vault
-  hosts: consul:vault
+- name: Install & configure Hashicorp Consul cluster + Vault + HAProxy
+#  hosts: consul:vault:haproxy
+  hosts: all
   gather_facts: no
 
 - import_playbook: consul.yml
 - import_playbook: vault.yml
+- import_playbook: haproxy.yml
 
