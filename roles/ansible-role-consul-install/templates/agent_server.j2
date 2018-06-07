@@ -8,7 +8,7 @@
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
   "bootstrap_expect": {{ groups['consul-server'] | length }},
   "retry_join": [{% for host in groups['consul-server'] %}
-"{{ consul_base_ip }}{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
+"{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
   "ui": true,
