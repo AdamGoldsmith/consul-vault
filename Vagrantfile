@@ -19,6 +19,18 @@ INTERNAL_NET="10.1.42."
 DOMAIN=""
 servers=[
   {
+    :hostname => "haproxy-s1" + DOMAIN,
+    :ip => INTERNAL_NET + "11",
+    :ssh_port => "22011",
+    :ram => 512
+  },
+  {
+    :hostname => "haproxy-s2" + DOMAIN,
+    :ip => INTERNAL_NET + "12",
+    :ssh_port => "22012",
+    :ram => 512
+  },
+  {
     :hostname => "consul-s1" + DOMAIN,
     :ip => INTERNAL_NET + "101",
     :ssh_port => "22101",
