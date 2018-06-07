@@ -10,7 +10,7 @@
     - "../vars/default.yml"
   when: systemd_libs is not defined
 
-- name: Installing dependencies
+- name: Install dependencies
   package:
     name: "{{ item }}"
     state: present
@@ -107,7 +107,7 @@
     mode: 0640
   notify: restart consul
 
-- name: keepalived
+- name: Install keepalived package
   package:
     name: "{{ item }}"
     state: present

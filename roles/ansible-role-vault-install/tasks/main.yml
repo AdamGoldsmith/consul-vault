@@ -48,7 +48,7 @@
     - "{{ vault_conf | dirname }}"
     - "{{ vault_certs }}"
 
-- name: Installing PIP
+- name: Install PIP
   package:
     name: python-pip
     state: present

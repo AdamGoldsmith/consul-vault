@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-role-consul-install
 
-- name: Installing dependencies
+- name: Install dependencies
   package:
     name: "{{ item }}"
     state: present
