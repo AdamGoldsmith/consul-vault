@@ -34,6 +34,7 @@ vault_src: "https://releases.hashicorp.com/vault/0.10.1/vault_0.10.1_linux_amd64
 vault_chksum: "sha256:031e521b4603487126fd353a9557dd22a02304a8a11f843e9914be59a8009c8a"	# Vault download file checksum
 vault_bin_path: "/usr/bin"								# Path to install vault binary
 vault_conf: "/etc/vault/config.hcl"							# Vault configuration file
+tls_disable: "false"									# Choose whether to disable TLS for vault connections (not advised)
 vault_certs: "/etc/vault/certs"								# Vault certificates directory
 vault_cn: "{{ ansible_fqdn }}"								# CSR Common Name
 vault_cc: "UK"										# CSR Country Code
