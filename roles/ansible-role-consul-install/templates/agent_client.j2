@@ -6,7 +6,7 @@
   "bind_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
   "client_addr": "127.0.0.1",
   "retry_join": [{% for host in groups['consul-server'] %}
-"{{ consul_base_ip }}{{ 100 + loop.index }}"
+"{{ consul_base_ip }}{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
   "encrypt": "{{ consul_secret }}",
