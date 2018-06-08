@@ -40,7 +40,6 @@
     group: "{{ consul_group }}"
     uid: "{{ consul_uid }}"
     comment: "consul systemd service user"
-    home: "{{ consul_path }}"
     shell: /sbin/nologin
     system: yes
     state: present

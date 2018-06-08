@@ -39,7 +39,6 @@ haproxy_sock: "/var/run/haproxy/haproxy.sock"						# HAProxy statistics socket f
 haproxy_service: "haproxy"								# Name of the HAProxy systemd service
 haproxy_user: "haproxy"									# User to run the HAProxy systemd service
 haproxy_uid: "8801"									# HAProxy user ID
-haproxy_home: "/etc/haproxy"								# HAProxy user HOME dir
 haproxy_group: "haproxy"								# Group for HAProxy user
 haproxy_gid: "8801"									# HAProxy group ID
 consul_dns_port: "8600"									# Consul DNS SRV port
