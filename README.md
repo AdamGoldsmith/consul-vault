@@ -3,7 +3,11 @@ Hashicorp vault & consul cluster
 
 Installs & confgures Hashicorp's consul & vault to run as an HA cluster
 
-[![Alt text](/images/Consul-Vault-UI.jpg)](https://www.consul.io/docs/index.html)
+### Symbolic representation overview of deployment
+![Alt text](/images/Vault-Consul-Cluster.jpg "Overview of deployment")
+
+### Consul UI Dashboard
+[![Alt text](/images/Consul-Vault-UI.jpg "Consul UI Dashboard")](https://www.consul.io/docs/index.html)
 
 Although the vault installation creates OpenSSL TLS private key, CSR & resultant certificate, the URI modules in these roles currently use "validate_certs: no". It is up to you to complete the TLS configuration.
 
