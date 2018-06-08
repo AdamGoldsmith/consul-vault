@@ -1,0 +1,5 @@
+---
+# defaults file for anisble-role-haproxy-reload
+
+haproxy_service: "haproxy"
+

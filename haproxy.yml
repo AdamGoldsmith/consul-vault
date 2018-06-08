@@ -10,4 +10,5 @@
     - { role: ansible-role-haproxy-install, tags: install }
     - { role: ansible-role-haproxy-start, tags: start }
     - { role: ansible-role-haproxy-stop, tags: stop }
+    - { role: ansible-role-haproxy-reload, tags: reload }
 

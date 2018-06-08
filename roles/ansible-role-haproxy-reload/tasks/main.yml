@@ -1,0 +1,10 @@
+---
+# tasks file for ansible-role-haproxy-reload
+
+- name: Reload HAProxy systemd services
+  systemd:
+    name: "{{ item }}"
+    state: reloaded
+  with_items:
+    - "{{ haproxy_service }}"
+
