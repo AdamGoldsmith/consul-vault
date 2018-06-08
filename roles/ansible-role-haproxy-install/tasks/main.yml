@@ -107,14 +107,14 @@
     mode: 0640
   notify: restart consul
 
-- name: Install keepalived package
+- name: Install Keepalived package
   package:
     name: "{{ item }}"
     state: present
   with_items:
     - "keepalived"
 
-- name: Start and enable HAProxy & keepalived services
+- name: Start and enable HAProxy & Keepalived services
   systemd:
     name: "{{ item }}"
     daemon_reload: yes

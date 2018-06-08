@@ -1,6 +1,6 @@
 ---
 
-- name: Install & configure HAProxy & keepalived
+- name: Install & configure HAProxy & Keepalived
   hosts: haproxy
   become: yes
   gather_facts: yes

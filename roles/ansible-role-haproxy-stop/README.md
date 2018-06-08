@@ -1,8 +1,8 @@
 Role : ansible-role-haproxy-stop
 ================================
 
-Stop keepalived & HAProxy by
-* Stopping the keepalived service
+Stop Keepalived & HAProxy by
+* Stopping the Keepalived service
 * Stopping the HAProxy service
 
 Currently tested on these Operating Systems
@@ -20,7 +20,7 @@ Role Variables
 defaults/main.yml
 ```
 haproxy_service: haproxy	# Name of the haproxy systemd service
-keepalived_service: keepalived	# Name of the haproxy systemd service
+keepalived_service: keepalived	# Name of the keepalived systemd service
 ```
 
 Dependencies
@@ -34,7 +34,7 @@ Example Playbook
 ```
 ---
 
-- name: Stop keepalived & HAProxy
+- name: Stop Keepalived & HAProxy
   hosts: localhost
   connection: local
 

@@ -1,9 +1,9 @@
 Role : ansible-role-haproxy-start
 =================================
 
-Start HAProxy & keepalived by
+Start HAProxy & Keepalived by
 * Starting the HAProxy service
-* Starting the keepalived service
+* Starting the Keepalived service
 
 Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS
@@ -20,7 +20,7 @@ Role Variables
 defaults/main.yml
 ```
 haproxy_service: haproxy	# Name of the haproxy systemd service
-keepalived_service: keepalived	# Name of the haproxy systemd service
+keepalived_service: keepalived	# Name of the keepalived systemd service
 ```
 
 Dependencies
@@ -34,7 +34,7 @@ Example Playbook
 ```
 ---
 
-- name: Start HAProxy & keepalived
+- name: Start HAProxy & Keepalived
   hosts: localhost
   connection: local
 

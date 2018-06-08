@@ -1,7 +1,7 @@
 Role : ansible-role-haproxy-install
 ===================================
 
-Installs HAProxy + keepalived by
+Installs HAProxy + Keepalived by
 * Downloading & unzipping HAProxy (1.8.9) source code
 * Compiling HAProxy from source into /usr/bin
 * Creating an haproxy group & user
@@ -10,9 +10,9 @@ Installs HAProxy + keepalived by
 * Creating haproxy configuration file
 * Creating haproxy health check file for consul
 * Starting & enabling haproxy systemd service
-* Installing keepalived
-* Configuring keepalived (To be completed)
-* Starting & enabling keepalived systemd service
+* Installing Keepalived
+* Configuring Keepalived (To be completed)
+* Starting & enabling Keepalived systemd service
 
 Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS 7
@@ -61,7 +61,7 @@ Example Playbook
 ```
 ---
 
-- name: Install HAProxy & keepalived
+- name: Install HAProxy & Keepalived
   hosts: haproxy
   become: yes
 

@@ -1,8 +1,8 @@
 Role : ansible-role-haproxy-remove
 ==================================
 
-Removes HAProxy & keepalived by
-* Stopping & disabling haproxy & keepalived systemd service
+Removes HAProxy & Keepalived by
+* Stopping & disabling haproxy & Keepalived systemd service
 * Deleting haproxy systemd service
 * Deleting the haproxy directory structure
 * Removing the haproxy user & group
@@ -41,7 +41,7 @@ Example Playbook
 ```
 ---
 
-- name: Remove HAProxy & keepalived
+- name: Remove HAProxy & Keepalived
   hosts: haproxy
   become: yes
 

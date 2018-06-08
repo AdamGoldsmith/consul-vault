@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-role-haproxy-remove
 
-- name: Stop and disable haproxy & keepalived systemd service
+- name: Stop and disable haproxy & Keepalived systemd service
   systemd:
     name: "{{ item }}"
     state: stopped
