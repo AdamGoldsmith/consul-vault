@@ -1,9 +1,9 @@
 {
   "service": {
     "name": "{{ haproxy_service }}",
-    "port": {{ vault_port }},
+    "port": 8101,
     "check": {
-      "http": "http://127.0.0.1:{{ vault_port }}",
+      "http": "http://127.0.0.1:8101/health_check",
       "interval": "10s"
     }
   }

@@ -13,19 +13,24 @@ resolvers consul-dns
   hold valid 100ms
 
 defaults
-    log         global
-    mode        tcp
-    option      dontlognull
-    retries     3
-    timeout     check    5s
-    timeout     client   5s
-    timeout     connect  10s
-    timeout     server   10s
-    # if not initialized, haproxy fails at configuration
-    default-server init-addr none
+  log global
+  mode tcp
+  option dontlognull
+  retries 3
+  timeout check 5s
+  timeout client 5s
+  timeout connect 10s
+  timeout server 10s
+  # if not initialized, haproxy fails at configuration
+  default-server init-addr none
+
+frontend health
+  bind *:8101
+  mode http
+  monitor-uri /health_check
 
 frontend vault
-  bind   *:{{ vault_port }}
+  bind *:{{ vault_port }}
   option tcplog
   tcp-request inspect-delay 2s
   default_backend vaultservice
