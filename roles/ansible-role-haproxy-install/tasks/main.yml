@@ -114,6 +114,27 @@
   with_items:
     - "keepalived"
 
+- name: Set network device variable
+  set_fact:
+    ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
+  when: ka_base_ip in hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
+  with_items:
+    - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
+
+- name: Generate random 8 character keepalive encryption string
+  set_fact:
+    ka_secret: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits')}}"
+  run_once: yes
+
+
+- name: Create Keepalived configuration
+  template:
+    src: keepalived_conf.j2
+    dest: "{{ ka_conf }}"
+    owner: root
+    group: root
+    mode: 0640
+
 - name: Start and enable HAProxy & Keepalived services
   systemd:
     name: "{{ item }}"

@@ -11,7 +11,7 @@ Installs HAProxy + Keepalived by
 * Creating haproxy health check file for consul
 * Starting & enabling haproxy systemd service
 * Installing Keepalived
-* Configuring Keepalived (To be completed)
+* Configuring Keepalived
 * Starting & enabling Keepalived systemd service
 
 Currently tested on these Operating Systems
@@ -48,6 +48,9 @@ consul_services_conf: "/etc/consul/consul_services.hcl"					# Consul service def
 consul_service: "consul"								# Name of the consul systemd service
 consul_user: "consul"									# User to run the consul systemd service
 consul_group: "consul"									# Group for consul user
+ka_base_ip: "10.1.42."                          					# Keepalived subnet
+ka_vip: "10.1.42.10"                          						# Keepalived virtual IP (floats between servers)
+ka_conf: "/etc/keepalived/keepalived.conf"						# Keepalived configuration file
 ```
 
 Dependencies

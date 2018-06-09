@@ -31,8 +31,10 @@ frontend health
 
 frontend vault
   bind *:{{ vault_port }}
+#  acl network_allowed src ip.ad.dr.ess			# Configure to whitelist src addresses
   option tcplog
   tcp-request inspect-delay 2s
+#  tcp-request connection reject if !network_allowed	# Uncomment once whitelist is defined
   default_backend vaultservice
 
 backend vaultservice
