@@ -62,7 +62,7 @@
 
 - name: Create consul agent configuration
   template:
-    src: "{{ consul_agent_file }}"
+    src: agent.j2
     dest: "{{ consul_conf }}"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
@@ -70,7 +70,7 @@
 
 - name: Create consul systemd service config
   template:
-    src: "{{ consul_service_file }}"
+    src: service.j2
     dest: "/etc/systemd/system/{{ consul_service }}.service"
     owner: root
     group: root

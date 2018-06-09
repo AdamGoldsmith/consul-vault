@@ -29,8 +29,6 @@ consul_chksum: "sha256:6c2c8f6f5f91dcff845f1b2ce8a29bd230c11397c448ce85aae6dacd6
 consul_bin_path: "/usr/bin"									# Path to install consul binary
 consul_path: "/var/lib/consul"									# The base consul directory
 consul_conf: "/etc/consul/consul_agent.hcl"							# Consul agent configuration file
-consul_agent_file: "agent_server.j2"								# Consul agent configuration template (Change to agent_client.j2 for client configuration [Hint: use group_vars])
-consul_service_file: "service_server.j2"							# Consul service configuration template (Change to service_client.j2 for client configuration [Hint: use group_vars])
 consul_datacenter: "dc1"									# Consul datacenter name
 consul_base_ip: "10.1.42."									# Consul subnet
 consul_user: "consul"										# User to run the consul systemd service

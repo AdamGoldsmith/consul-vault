@@ -1,17 +1,19 @@
 {
-  "server": true,
+  "server": {{ 'true' if inventory_hostname in groups['consul-server'] else 'false' }},
   "node_name": "{{ inventory_hostname }}",
   "datacenter": "{{ consul_datacenter }}",
   "data_dir": "{{ consul_path }}/data",
-  "bind_addr": "0.0.0.0",
-  "client_addr": "0.0.0.0",
+  "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul-server'] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
+  "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul-server'] else '127.0.0.1' }}",
+{% if inventory_hostname in groups['consul-server'] %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
   "bootstrap_expect": {{ groups['consul-server'] | length }},
+  "ui": true,
+{% endif %}
   "retry_join": [{% for host in groups['consul-server'] %}
 "{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
-  "ui": true,
   "encrypt": "{{ consul_secret }}",
   "log_level": "DEBUG",
   "enable_syslog": true,
