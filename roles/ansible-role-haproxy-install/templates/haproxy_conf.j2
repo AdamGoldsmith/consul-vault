@@ -30,7 +30,7 @@ frontend health
   monitor-uri /health_check
 
 frontend vault
-  bind *:{{ vault_port }}
+  bind {{ ka_vip }}:{{ vault_port }}
 #  acl network_allowed src ip.ad.dr.ess			# Configure to whitelist src addresses
   option tcplog
   tcp-request inspect-delay 2s

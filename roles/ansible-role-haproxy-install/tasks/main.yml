@@ -135,6 +135,13 @@
     group: root
     mode: 0640
 
+- name: Allow HAProxy to bind to non-existent VIP at startup
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: 1
+    state: present
+    reload: yes
+
 - name: Start and enable HAProxy & Keepalived services
   systemd:
     name: "{{ item }}"

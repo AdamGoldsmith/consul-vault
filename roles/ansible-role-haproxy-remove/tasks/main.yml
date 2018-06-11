@@ -13,6 +13,13 @@
     - "keepalived"
     - "{{ haproxy_service }}"
 
+- name: Disable non-local IP bindings
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: 1
+    state: absent
+    reload: yes
+
 - name: Delete haproxy systemd service config
   file:
     path: "/etc/systemd/system/{{ haproxy_service }}.service"
