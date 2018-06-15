@@ -1,0 +1,34 @@
+[haproxy-master]
+haproxy-s1 ansible_host=10.1.42.11
+
+[haproxy-standby]
+haproxy-s2 ansible_host=10.1.42.12
+
+[haproxy:children]
+haproxy-master
+haproxy-standby
+
+[vault]
+vault-s1 ansible_host=10.1.42.201
+vault-s2 ansible_host=10.1.42.202
+vault-s3 ansible_host=10.1.42.203
+
+[consul-client:children]
+haproxy
+vault
+
+[consul-server]
+consul-s1 ansible_host=10.1.42.101
+consul-s2 ansible_host=10.1.42.102
+consul-s3 ansible_host=10.1.42.103
+consul-s4 ansible_host=10.1.42.104
+consul-s5 ansible_host=10.1.42.105
+
+[consul:children]
+consul-client
+consul-server
+
+[all:vars]
+ansible_user=vagrant
+ansible_ssh_common_args='-o "UserKnownHostsFile /dev/null"'
+
