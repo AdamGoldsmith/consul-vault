@@ -1,7 +1,7 @@
 Hashicorp vault & consul cluster
 ================================
 
-Installs & confgures Hashicorp's consul & vault to run as an HA cluster
+Installs & confgures Hashicorp's Consul & Vault + HAProxy to run as an HA cluster
 
 ### Symbolic representation overview of deployment
 ![Alt text](/images/Vault-Consul-Cluster.jpg "Overview of deployment")
@@ -39,7 +39,8 @@ Getting the code
 Running the deployment
 ----------------------
 
-`vagrant up`
+```cd vagrant
+vagrant up```
 
 On the Ansible Control Machine  
 
@@ -49,7 +50,7 @@ __To deploy__
 
 or
 
-`ansible-playbook -i inventory site.yml --skip-tags 'remove,stop'`
+`ansible-playbook site.yml --skip-tags 'remove,stop'`
 
 __To remove__
 
@@ -57,7 +58,7 @@ __To remove__
 
 or
 
-`ansible-playbook -i inventory site.yml --tags 'remove'`
+`ansible-playbook site.yml --tags 'remove'`
 
 Known Issues
 ------------
