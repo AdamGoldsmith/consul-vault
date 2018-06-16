@@ -39,8 +39,10 @@ Getting the code
 Running the deployment
 ----------------------
 
-```cd vagrant
-vagrant up```
+```
+cd vagrant
+vagrant up
+```
 
 On the Ansible Control Machine  
 
@@ -59,6 +61,8 @@ __To remove__
 or
 
 `ansible-playbook site.yml --tags 'remove'`
+
+[![asciicast](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv.png)](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv?autoplay=1&size=small&cols=140&rows=40)
 
 Known Issues
 ------------
