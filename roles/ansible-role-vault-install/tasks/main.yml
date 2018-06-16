@@ -60,7 +60,9 @@
 
 - name: Install python OpenSSL dependencies
   pip:
-    name: pyOpenSSL
+    name: "{{ item }}"
+  loop:
+    - "pyOpenSSL"
 
 - name: Generate OpenSSL private key pem file
   openssl_privatekey:
