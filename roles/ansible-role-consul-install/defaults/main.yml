@@ -3,6 +3,8 @@
 
 consul_src: "https://releases.hashicorp.com/consul/1.1.0/consul_1.1.0_linux_amd64.zip"
 consul_chksum: "sha256:09c40c8b5be868003810064916d8460bff334ccfb59a5046390224b27e052c45"
+consul_dependencies:
+  - unzip
 consul_bin_path: "/usr/bin"
 consul_path: "/var/lib/consul"
 consul_conf: "/etc/consul/consul_agent.hcl"

@@ -3,10 +3,8 @@
 
 - name: Install dependencies
   package:
-    name: "{{ item }}"
+    name: "{{ consul_dependencies }}"
     state: present
-  loop:
-    - "unzip"
 
 - name: Download consul binary ({{ consul_src | basename }})
   get_url:

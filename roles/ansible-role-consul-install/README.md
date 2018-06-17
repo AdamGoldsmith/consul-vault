@@ -26,6 +26,8 @@ defaults/main.yml
 ```
 consul_src: "https://releases.hashicorp.com/consul/1.0.7/consul_1.0.7_linux_amd64.zip"		# Version of consul to download from Hashicorp's website
 consul_chksum: "sha256:6c2c8f6f5f91dcff845f1b2ce8a29bd230c11397c448ce85aae6dacd68aa4c14"	# SHA256 checksum for zip file
+consul_dependencies:										# List of Consul's software dependencies
+  - unzip
 consul_bin_path: "/usr/bin"									# Path to install consul binary
 consul_path: "/var/lib/consul"									# The base consul directory
 consul_conf: "/etc/consul/consul_agent.hcl"							# Consul agent configuration file

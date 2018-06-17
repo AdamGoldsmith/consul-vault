@@ -1,7 +1,6 @@
 ---
 # roles/ansible-role-haproxy-install/vars/RedHat.yml
 compiler: "gcc"
-pcre_libs: "pcre-static"
 pcre_libs_dev: "pcre-devel"
 systemd_libs_dev: "systemd-devel"
 

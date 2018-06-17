@@ -10,15 +10,17 @@
     - "../vars/default.yml"
   when: systemd_libs is not defined
 
+- name: Create list of dependencies
+  set_fact:
+    haproxy_dependencies:
+      - "{{ compiler }}"
+      - "{{ pcre_libs_dev }}"
+      - "{{ systemd_libs_dev }}"
+
 - name: Install dependencies
   package:
-    name: "{{ item }}"
+    name: "{{ lookup('flattened', haproxy_dependencies) }}"
     state: present
-  loop:
-    - "{{ compiler }}"
-    - "{{ pcre_libs }}"
-    - "{{ pcre_libs_dev }}"
-    - "{{ systemd_libs_dev }}"
 
 - name: Download haproxy source code ({{ haproxy_src | basename }})
   get_url:
@@ -109,10 +111,8 @@
 
 - name: Install Keepalived package
   package:
-    name: "{{ item }}"
+    name: "keepalived"
     state: present
-  with_items:
-    - "keepalived"
 
 - name: Set network device variable
   set_fact:
