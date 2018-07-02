@@ -24,8 +24,8 @@ Role Variables
 
 defaults/main.yml
 ```
-consul_src: "https://releases.hashicorp.com/consul/1.0.7/consul_1.0.7_linux_amd64.zip"		# Version of consul to download from Hashicorp's website
-consul_chksum: "sha256:6c2c8f6f5f91dcff845f1b2ce8a29bd230c11397c448ce85aae6dacd68aa4c14"	# SHA256 checksum for zip file
+consul_src: "https://releases.hashicorp.com/consul/1.2.0/consul_1.2.0_linux_amd64.zip"		# Version of consul to download from Hashicorp's website
+consul_chksum: "sha256:85d84ea3f6c68d52549a29b00fd0035f72c2eabff672ae46ca643cb407ef94b4"	# SHA256 checksum for zip file
 consul_dependencies:										# List of Consul's software dependencies
   - unzip
 consul_bin_path: "/usr/bin"									# Path to install consul binary

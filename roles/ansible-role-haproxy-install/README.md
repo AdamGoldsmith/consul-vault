@@ -29,8 +29,8 @@ Role Variables
 
 defaults/main.yml
 ```
-haproxy_src: "http://www.haproxy.org/download/1.8/src/haproxy-1.8.9.tar.gz"		# Version of HAProxy to download
-haproxy_chksum: "md5:1466cf8c1c036e376265b86df43efc89"					# HAProxy download file checksum
+haproxy_src: "http://www.haproxy.org/download/1.8/src/haproxy-1.8.12.tar.gz"		# Version of HAProxy to download
+haproxy_chksum: "md5:9f37013ec1e76942a67a9f7c067af9f2"					# HAProxy download file checksum
 haproxy_bin_path: "/usr/bin"								# Path to install haproxy binary
 haproxy_conf: "/etc/haproxy/haproxy.cfg"						# HAProxy configuration file
 haproxy_mc: "2000"									# HAProxy maximum connections

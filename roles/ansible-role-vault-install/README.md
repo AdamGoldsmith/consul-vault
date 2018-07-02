@@ -30,8 +30,8 @@ Role Variables
 
 defaults/main.yml
 ```
-vault_src: "https://releases.hashicorp.com/vault/0.10.1/vault_0.10.1_linux_amd64.zip"	# Version of vault to download from Hashicorp's website
-vault_chksum: "sha256:031e521b4603487126fd353a9557dd22a02304a8a11f843e9914be59a8009c8a"	# Vault download file checksum
+vault_src: "https://releases.hashicorp.com/vault/0.10.3/vault_0.10.3_linux_amd64.zip"	# Version of vault to download from Hashicorp's website
+vault_chksum: "sha256:ffec1c201f819f47581f54c08653a8d17ec0a6699854ebd7f6625babb9e290ed"	# Vault download file checksum
 vault_bin_path: "/usr/bin"								# Path to install vault binary
 vault_conf: "/etc/vault/config.hcl"							# Vault configuration file
 tls_disable: "false"									# Choose whether to disable TLS for vault connections (not advised)
