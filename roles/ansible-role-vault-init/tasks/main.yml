@@ -27,7 +27,7 @@
     mode: 0600
   delegate_to: localhost
   become: no
-  no_log: True
+  no_log: yes
   when: vault_init is not skipped
   run_once: yes
 

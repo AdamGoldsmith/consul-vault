@@ -33,8 +33,8 @@ Example Playbook
 ---
 
 - name: Stop Hashicorp Vault
-  hosts: localhost
-  connection: local
+  hosts: vault
+  become: yes
 
   roles:
     - ansible-role-vault-stop

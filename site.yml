@@ -1,7 +1,6 @@
 ---
 
 - name: Install & configure Hashicorp Consul cluster + Vault + HAProxy
-#  hosts: consul:vault:haproxy
   hosts: all
   gather_facts: no
 

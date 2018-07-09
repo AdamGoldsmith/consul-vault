@@ -35,8 +35,8 @@ Example Playbook
 ---
 
 - name: Start HAProxy & Keepalived
-  hosts: localhost
-  connection: local
+  hosts: haproxy
+  become: yes
 
   roles:
     - ansible-role-haproxy-start

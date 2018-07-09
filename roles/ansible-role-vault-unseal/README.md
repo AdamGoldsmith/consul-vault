@@ -39,9 +39,9 @@ Example Playbook
 ---
 
 - name: Unseal Hashicorp Vault
-  hosts: localhost
-  connection: local
-  become: True
+  hosts: vault
+  become: yes
+  gather_facts: yes
 
   roles:
     - ansible-role-vault-unseal

@@ -33,8 +33,8 @@ Example Playbook
 ---
 
 - name: Start Hashicorp Consul
-  hosts: localhost
-  connection: local
+  hosts: consul
+  become: yes
 
   roles:
     - ansible-role-consul-start

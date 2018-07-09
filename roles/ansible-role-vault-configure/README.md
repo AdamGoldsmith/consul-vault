@@ -43,9 +43,9 @@ Example Playbook
 ---
 
 - name: Configure Hashicorp Vault
-  hosts: localhost
-  connection: local
-  become: True
+  hosts: vault
+  gather_facts: yes
+  become: yes
 
   roles:
     - ansible-role-vault-configure

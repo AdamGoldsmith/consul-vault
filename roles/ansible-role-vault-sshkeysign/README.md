@@ -46,8 +46,8 @@ Example Playbook
 ---
 
 - name: Create SSH Key Signing in Hashicorp Vault
-  hosts: localhost
-  connection: local
+  hosts: vault
+  gather_facts: yes
 
   roles:
     - ansible-role-vault-sshkeysign

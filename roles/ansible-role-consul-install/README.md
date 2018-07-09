@@ -54,6 +54,7 @@ Example Playbook
 - name: Install Hashicorp Consul
   hosts: consul
   become: yes
+  gather_facts: yes
 
   roles:
     - ansible-role-consul-install

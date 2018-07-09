@@ -33,8 +33,8 @@ Example Playbook
 ---
 
 - name: Reload HAProxy
-  hosts: localhost
-  connection: local
+  hosts: haproxy
+  become: yes
 
   roles:
     - ansible-role-haproxy-reload

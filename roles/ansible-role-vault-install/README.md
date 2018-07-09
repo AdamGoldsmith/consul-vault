@@ -69,6 +69,7 @@ Example Playbook
 - name: Install Hashicorp Vault
   hosts: vault
   become: yes
+  gather_facts: yes
 
   roles:
     - ansible-role-vault-install

@@ -43,8 +43,8 @@ Example Playbook
 ---
 
 - name: Create approle in Hashicorp Vault
-  hosts: localhost
-  connection: local
+  hosts: vault
+  gather_facts: yes
 
   roles:
     - ansible-role-vault-approle

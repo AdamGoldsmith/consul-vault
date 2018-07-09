@@ -35,8 +35,8 @@ Example Playbook
 ---
 
 - name: Stop Keepalived & HAProxy
-  hosts: localhost
-  connection: local
+  hosts: haproxy
+  become: yes
 
   roles:
     - ansible-role-haproxy-stop

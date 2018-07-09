@@ -67,6 +67,7 @@ Example Playbook
 - name: Install HAProxy & Keepalived
   hosts: haproxy
   become: yes
+  gather_facts: yes
 
   roles:
     - ansible-role-haproxy-install

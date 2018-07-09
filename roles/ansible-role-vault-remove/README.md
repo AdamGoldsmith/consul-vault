@@ -45,9 +45,8 @@ Example Playbook
 ---
 
 - name: Remove Hashicorp Vault
-  hosts: localhost
-  connection: local
-  become: True
+  hosts: vault
+  become: yes
 
   roles:
     - ansible-role-vault-remove
