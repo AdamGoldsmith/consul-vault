@@ -52,7 +52,7 @@ __To deploy__
 
 or
 
-`ansible-playbook site.yml --skip-tags 'remove,stop'`
+`ansible-playbook site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
 
 __To remove__
 
