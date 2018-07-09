@@ -1,0 +1,13 @@
+---
+# tasks file for ansible-role-consul-backup
+
+- name: Backup Consul cluster to 
+  uri:
+    url: "http://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}:{{ consul_port }}/v1/snapshot?dc={{ consul_datacenter }}"
+    method: GET
+    status_code: 200
+    dest: "~/consul.snapshot.{{ ansible_date_time.epoch }}.tgz"
+  delegate_to: localhost
+  become: no
+  run_once: yes
+
