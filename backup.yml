@@ -2,7 +2,6 @@
 
 - name: Backup Hashicorp Consul cluster with snapshot
   hosts: consul-server
-#  become: yes
   gather_facts: yes
 
   roles:
