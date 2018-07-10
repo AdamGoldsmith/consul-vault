@@ -10,7 +10,6 @@
     - { role: ansible-role-consul-install, tags: install }
     - { role: ansible-role-consul-start, tags: start }
     - { role: ansible-role-consul-stop, tags: stop }
-#    - { role: ansible-role-consul-backup, tags: backup }
 
 - name: Consul backup management
   hosts: consul-server

@@ -19,9 +19,10 @@ Role Variables
 
 defaults/main.yml
 ```
-consul_datacenter: "dc1"                                                                        # Consul datacenter name
-consul_base_ip: "10.1.42."                                                                      # Consul subnet
-consul_port: "8500"										# Consul listener port
+consul_datacenter: "dc1"		# Consul datacenter name
+consul_base_ip: "10.1.42."		# Consul subnet
+consul_port: "8500"			# Consul listener port
+consul_backup_dir: "~"			# Consul backup directory for compressed snapshot file
 ```
 
 Dependencies

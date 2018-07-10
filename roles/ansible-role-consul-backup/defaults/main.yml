@@ -4,4 +4,5 @@
 consul_datacenter: "dc1"
 consul_base_ip: "10.1.42."
 consul_port: "8500"
+consul_backup_dir: "~"
 
