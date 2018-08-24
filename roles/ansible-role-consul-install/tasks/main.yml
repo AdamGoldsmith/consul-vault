@@ -6,18 +6,58 @@
     name: "{{ consul_dependencies }}"
     state: present
 
-- name: Download consul binary ({{ consul_src | basename }})
+- name: Get latest consul version information
+  uri:
+    url: "{{ checkpoint_url }}"
+  register: consul_data
+  run_once: yes
+  delegate_to: localhost
+
+- name: Setting version fact
+  set_fact:
+    consul_version: "{{ consul_data.json.current_version }}"
+  when: consul_version == "latest"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Setting consul download URL
+  set_fact:
+    consul_download: "{{ consul_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ consul_version }}/"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Getting consul chksums
+  uri:
+    url: "{{ consul_download }}consul_{{ consul_version }}_SHA256SUMS"
+    return_content: yes
+  register: consul_shasums
+  run_once: yes
+  delegate_to: localhost
+
+- name: Set chksum search pattern
+  set_fact:
+    pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ consul_arch }}.zip"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Set consul_chksum fact
+  set_fact:
+    consul_chksum: "sha256:{{ consul_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Download consul binary (consul_{{ consul_version }}_{{ consul_arch }}.zip)
   get_url:
-    url: "{{ consul_src }}"
+    url: "{{ consul_download }}consul_{{ consul_version }}_{{ consul_arch }}.zip"
     checksum: "{{ consul_chksum }}"
-    dest: "/tmp/{{ consul_src | basename }}"
+    dest: "/tmp/consul_{{ consul_version }}_{{ consul_arch }}.zip"
     force: yes
     owner: root
     group: root
 
-- name: Unzip consul binary ({{ consul_src | basename }})
+- name: Unzip consul binary (consul_{{ consul_version }}_{{ consul_arch }}.zip)
   unarchive:
-    src: "/tmp/{{ consul_src | basename }}"
+    src: "/tmp/consul_{{ consul_version }}_{{ consul_arch }}.zip"
     remote_src: yes
     dest: "{{ consul_bin_path }}"
     creates: "{{ consul_bin_path }}/consul"

@@ -1,8 +1,9 @@
 ---
 # defaults file for ansible-role-consul-install
 
-consul_src: "https://releases.hashicorp.com/consul/1.2.0/consul_1.2.0_linux_amd64.zip"
-consul_chksum: "sha256:85d84ea3f6c68d52549a29b00fd0035f72c2eabff672ae46ca643cb407ef94b4"
+consul_version: latest
+consul_arch: linux_amd64
+checkpoint_url: "https://checkpoint-api.hashicorp.com/v1/check/consul"
 consul_dependencies:
   - unzip
 consul_bin_path: "/usr/bin"
