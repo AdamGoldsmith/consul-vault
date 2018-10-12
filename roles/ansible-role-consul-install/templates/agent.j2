@@ -6,6 +6,11 @@
   "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul-server'] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
   "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul-server'] else '127.0.0.1' }}",
 {% if inventory_hostname in groups['consul-server'] %}
+  "service": {
+    "name": "{{ consul_service }}",
+    "address": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
+    "port": "{{ consul_port }}"
+  },
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
   "bootstrap_expect": {{ groups['consul-server'] | length }},
   "ui": true,

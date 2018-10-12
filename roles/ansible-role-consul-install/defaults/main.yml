@@ -16,4 +16,5 @@ consul_uid: "8501"
 consul_group: "consul"
 consul_gid: "8501"
 consul_service: "consul"
+consul_port: "8300"
 
