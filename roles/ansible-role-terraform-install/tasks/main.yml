@@ -1,0 +1,68 @@
+---
+# tasks file for ansible-role-terraform-install
+
+- name: Install dependencies
+  package:
+    name: "{{ terraform_dependencies }}"
+    state: present
+
+- name: Get latest terraform version information
+  uri:
+    url: "{{ checkpoint_url }}"
+  register: terraform_data
+  run_once: yes
+  delegate_to: localhost
+
+- name: Setting version fact
+  set_fact:
+    terraform_version: "{{ terraform_data.json.current_version }}"
+  when: terraform_version == "latest"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Setting terraform download URL
+  set_fact:
+    terraform_download: "{{ terraform_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ terraform_version }}/"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Getting terraform chksums
+  uri:
+    url: "{{ terraform_download }}terraform_{{ terraform_version }}_SHA256SUMS"
+    return_content: yes
+  register: terraform_shasums
+  run_once: yes
+  delegate_to: localhost
+
+- name: Set chksum search pattern
+  set_fact:
+    pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ terraform_arch }}.zip"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Set terraform_chksum fact
+  set_fact:
+    terraform_chksum: "sha256:{{ terraform_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
+  run_once: yes
+  delegate_to: localhost
+
+- name: Download terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
+  get_url:
+    url: "{{ terraform_download }}terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+    checksum: "{{ terraform_chksum }}"
+    dest: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+    force: yes
+    owner: root
+    group: root
+
+- name: Unzip terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
+  unarchive:
+    src: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+    remote_src: yes
+    dest: "{{ terraform_bin_path }}"
+    creates: "{{ terraform_bin_path }}/terraform"
+    owner: root
+    group: root
+    mode: 0755
+    keep_newer: true
+

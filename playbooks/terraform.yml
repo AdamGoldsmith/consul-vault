@@ -1,0 +1,12 @@
+---
+
+- name: Install terraform by Hashicorp
+  hosts: localhost
+  connection: local
+  become: yes
+  gather_facts: no
+
+  roles:
+    - { role: ansible-role-terraform-install, tags: [ 'never', 'terraform' ] }
+    - { role: ansible-role-terraform-remove, tags: [ 'never', 'remove' ] }
+

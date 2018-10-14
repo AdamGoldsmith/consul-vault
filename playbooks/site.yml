@@ -4,6 +4,7 @@
   hosts: all
   gather_facts: no
 
+- import_playbook: terraform.yml
 - import_playbook: consul.yml
 - import_playbook: vault.yml
 - import_playbook: haproxy.yml
