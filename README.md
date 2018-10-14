@@ -52,7 +52,7 @@ __To deploy__
 
 or
 
-`ansible-playbook site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
+`ansible-playbook playbooks/site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
 
 __To remove__
 
@@ -60,7 +60,7 @@ __To remove__
 
 or
 
-`ansible-playbook site.yml --tags 'remove'`
+`ansible-playbook playbooks/site.yml --tags 'remove'`
 
 [![asciicast](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv.png)](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv?autoplay=1&size=small&cols=140&rows=40)
 

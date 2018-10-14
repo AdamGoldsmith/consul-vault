@@ -15,19 +15,19 @@ Examples\n
 
    ./deploy.sh
 
-   Equivalent to running \"ansible-playbook site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'\"
+   Equivalent to running \"ansible-playbook playbooks/site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'\"
 
 2) Stop consul service on all consul hosts
 
    ./deploy -s consul -t stop
 
-   Equivalent to running \"ansible-playbook consul.yml --tags 'stop'\"
+   Equivalent to running \"ansible-playbook playbooks/consul.yml --tags 'stop'\"
 
 3) Remove complete consul + vault + HAProxy environment
 
   ./deploy -t 'remove'
 
-  Equivalent to running \"ansible-playbook site.yml --tags 'remove'\"
+  Equivalent to running \"ansible-playbook playbooks/site.yml --tags 'remove'\"
 "
 
 while getopts s:t:nh name
@@ -41,7 +41,7 @@ do
   esac
 done 2>/dev/null
 
-cmd="ansible-playbook ${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle,sshkeysign}'"
+cmd="ansible-playbook playbooks/${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle,sshkeysign}'"
 
 printf "\n${cmd}\n"
 [[ -z ${norun} ]] && eval ${cmd} || printf "\n"
