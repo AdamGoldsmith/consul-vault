@@ -56,3 +56,7 @@
     status_code: 200
   become: no
   run_once: yes
+  register: clear
+  # Do not fail if consul has been removed already
+  failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
+
