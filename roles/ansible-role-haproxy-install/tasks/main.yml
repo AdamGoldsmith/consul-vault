@@ -126,7 +126,6 @@
     ka_secret: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits')}}"
   run_once: yes
 
-
 - name: Create Keepalived configuration
   template:
     src: keepalived_conf.j2
