@@ -9,7 +9,7 @@
 ### END INIT INFO
 
 [Unit]
-Description=Consul {{ 'server' if inventory_hostname in groups['consul-server'] else 'client' }} agent
+Description=Consul {{ 'server' if inventory_hostname in groups['consul_server'] else 'client' }} agent
 Documentation=https://www.consul.io/docs/index.html
 Requires=network-online.target
 After=network-online.target
@@ -19,7 +19,7 @@ User={{ consul_user }}
 Group={{ consul_group }}
 PIDFile=/var/run/{{ consul_service }}/{{ consul_service }}.pid
 PermissionsStartOnly=true
-{% if inventory_hostname in groups['consul-server'] %}
+{% if inventory_hostname in groups['consul_server'] %}
 Environment=CONSUL_UI_BETA=true
 {% endif %}
 ExecStartPre=-/bin/mkdir -p /var/run/{{ consul_service }}

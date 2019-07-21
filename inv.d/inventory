@@ -1,23 +1,29 @@
-[haproxy-master]
+[controller]
+localhost
+
+[controller:vars]
+ansible_connection=local
+
+[haproxy_master]
 haproxy-s1 ansible_host=10.1.42.11
 
-[haproxy-standby]
+[haproxy_standby]
 haproxy-s2 ansible_host=10.1.42.12
 
 [haproxy:children]
-haproxy-master
-haproxy-standby
+haproxy_master
+haproxy_standby
 
 [vault]
-vault-s1 ansible_host=10.1.42.201
-vault-s2 ansible_host=10.1.42.202
-vault-s3 ansible_host=10.1.42.203
+vault_s1 ansible_host=10.1.42.201
+vault_s2 ansible_host=10.1.42.202
+vault_s3 ansible_host=10.1.42.203
 
-[consul-client:children]
+[consul_client:children]
 haproxy
 vault
 
-[consul-server]
+[consul_server]
 consul-s1 ansible_host=10.1.42.101
 consul-s2 ansible_host=10.1.42.102
 consul-s3 ansible_host=10.1.42.103
@@ -25,8 +31,8 @@ consul-s4 ansible_host=10.1.42.104
 consul-s5 ansible_host=10.1.42.105
 
 [consul:children]
-consul-client
-consul-server
+consul_client
+consul_server
 
 [all:vars]
 ansible_user=vagrant

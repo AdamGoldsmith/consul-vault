@@ -31,7 +31,7 @@ vault_group: "vault"					# Group for vault user
 vault_service: "vault"					# Name of the vault systemd service
 vault_profile: "/etc/profile.d/vault.sh"		# System-wide profile for setting Vault listening address
 audit_path: "/var/log/vault"				# Audit log file directory
-consul_server_group: "consul-server"			# Name of consul servers defined in inventory file
+consul_server_group: "consul_server"			# Name of consul servers defined in inventory file
 consul_port: 8500					# Consul listener port
 ```
 

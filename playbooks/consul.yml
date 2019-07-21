@@ -12,7 +12,7 @@
     - { role: ansible-role-consul-stop, tags: [ 'never', 'stop' ] }
 
 - name: Consul backup management
-  hosts: consul-server
+  hosts: consul_server
   become: no
   gather_facts: no
 

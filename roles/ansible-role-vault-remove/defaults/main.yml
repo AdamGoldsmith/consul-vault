@@ -9,5 +9,5 @@ vault_group: "vault"
 vault_service: "vault"
 vault_profile: "/etc/profile.d/vault.sh"
 audit_path: "/var/log/vault"
-consul_server_group: "consul-server"
+consul_server_group: "consul_server"
 consul_port: 8500

@@ -5,8 +5,8 @@ vrrp_script chk_haproxy {
 
 vrrp_instance VRRP_1 {
   interface {{ ka_dev }}
-  state {{ 'MASTER' if inventory_hostname in groups['haproxy-master'] else 'BACKUP' }}
-  priority {{ '200' if inventory_hostname in groups['haproxy-master'] else '100' }}
+  state {{ 'MASTER' if inventory_hostname in groups['haproxy_master'] else 'BACKUP' }}
+  priority {{ '200' if inventory_hostname in groups['haproxy_master'] else '100' }}
   virtual_router_id 10
   virtual_ipaddress {
     {{ ka_vip }}
