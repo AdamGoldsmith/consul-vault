@@ -46,3 +46,17 @@
     path: "{{ vault_bin_path }}/vault"
     state: absent
 
+# Required to prevent leftover data in consul kv store
+# This step is powerful enough to destroy vault data - it needs securing with ACLs!
+- name: Clear down consul backend data
+  uri:
+    url: "http://{{ hostvars[groups[consul_server_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
+    validate_certs: no
+    method: DELETE
+    status_code: 200
+  become: no
+  run_once: yes
+  register: clear
+  # Do not fail if consul has been removed already
+  failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
+

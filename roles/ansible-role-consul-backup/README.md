@@ -37,7 +37,7 @@ Example Playbook
 ---
 
 - name: Backup Hashicorp Consul cluster with snapshot
-  hosts: consul-server
+  hosts: consul_server
   gather_facts: yes
 
   roles:
