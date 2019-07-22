@@ -1,6 +1,6 @@
 ---
 
-- name: Install terraform by Hashicorp
+- name: Install Hashicorp Terraform
   hosts: localhost
   connection: local
 #  become: yes
