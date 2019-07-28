@@ -6,8 +6,8 @@
 #  become: yes
   gather_facts: no
 
-  environment:
-    DO_API_TOKEN: "{{ do_api_token }}"
+#  environment:
+#    DO_API_TOKEN: "{{ do_api_token }}"
 
   roles:
     - { role: ansible-role-terraform-remove, become: yes, tags: [ 'never', 'remove' ] }
@@ -18,15 +18,15 @@
     - name: Tagged block
       block:
 
-        - name: Get localhost's internet source IP address
-          uri:
-            url: http://checkip.dyndns.org
-            return_content: yes
-          register: checkip
-
-        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
-          set_fact:
-            source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+#        - name: Get localhost's internet source IP address
+#          uri:
+#            url: http://checkip.dyndns.org
+#            return_content: yes
+#          register: checkip
+#
+#        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+#          set_fact:
+#            source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
 
         - name: "Terraform {{ (state | default('present') == 'present') | ternary('create', 'destroy') }} environment"
           terraform:
@@ -47,13 +47,14 @@
           debug:
             var: item
           with_items:
-            - "{{ terraform_result.outputs.haproxy_public_ips.value }}"
-            - "{{ terraform_result.outputs.haproxy_private_ips.value }}"
-            - "{{ terraform_result.outputs.vault_public_ips.value }}"
-            - "{{ terraform_result.outputs.vault_private_ips.value }}"
-            - "{{ terraform_result.outputs.consul_public_ips.value }}"
-            - "{{ terraform_result.outputs.consul_private_ips.value }}"
-          when: state != 'absent'
+            - "{{ terraform_result['outputs']['haproxy_public_ips']['value'] }}"
+            - "{{ terraform_result['outputs']['haproxy_private_ips']['value'] }}"
+            - "{{ terraform_result['outputs']['vault_public_ips']['value'] }}"
+            - "{{ terraform_result['outputs']['vault_private_ips']['value'] }}"
+            - "{{ terraform_result['outputs']['consul_public_ips']['value'] }}"
+            - "{{ terraform_result['outputs']['consul_private_ips']['value'] }}"
+          when:
+            - state | default('present') != 'absent'
 
     #    - name: Check existence of DO inventory file
     #      stat:
