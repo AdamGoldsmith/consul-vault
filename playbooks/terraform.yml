@@ -15,92 +15,99 @@
 
   post_tasks:
 
-    - name: Get localhost's internet source IP address
-      uri:
-        url: http://checkip.dyndns.org
-        return_content: yes
-      register: checkip
+    - name: Tagged block
+      block:
 
-    - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
-      set_fact:
-        source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+        - name: Get localhost's internet source IP address
+          uri:
+            url: http://checkip.dyndns.org
+            return_content: yes
+          register: checkip
 
-    - name: "Terraform {{ (state | default('present') == 'present') | ternary('create', 'destroy') }} environment"
-      terraform:
-#        force_init: yes
-        state: "{{ state | default('present') }}"
-        project_path: "../terraform_files"
-      register: terraform_result
-      environment:
-        TF_VAR_do_api_token: "{{ do_api_token }}"
-        TF_VAR_do_ssh_keys: "{{ do_ssh_keys }}"
-        TF_VAR_do_source_ip: "{{ source_ip }}"
+        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+          set_fact:
+            source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
 
-    - name: Show contents of terraform_result
-      debug:
-        var: terraform_result.stdout_lines
+        - name: "Terraform {{ (state | default('present') == 'present') | ternary('create', 'destroy') }} environment"
+          terraform:
+    #        force_init: yes
+            state: "{{ state | default('present') }}"
+            project_path: "../terraform_files"
+          register: terraform_result
+          environment:
+            TF_VAR_do_api_token: "{{ do_api_token }}"
+            TF_VAR_do_ssh_keys: "{{ do_ssh_keys }}"
+            TF_VAR_do_source_ip: "{{ source_ip }}"
 
-    - name: Show contents of terraform_result ip_address
-      debug:
-        var: item
-      with_items:
-        - "{{ terraform_result.outputs.haproxy_public_ips.value }}"
-        - "{{ terraform_result.outputs.haproxy_private_ips.value }}"
-        - "{{ terraform_result.outputs.vault_public_ips.value }}"
-        - "{{ terraform_result.outputs.vault_private_ips.value }}"
-        - "{{ terraform_result.outputs.consul_public_ips.value }}"
-        - "{{ terraform_result.outputs.consul_private_ips.value }}"
+        - name: Show contents of terraform_result
+          debug:
+            var: terraform_result.stdout_lines
 
-#    - name: Check existence of DO inventory file
-#      stat:
-#        path: ../inv.d/do
-#      register: inv_file
-#      become: no
-#
-#    - name: Create default DO inventory file if not present
-#      copy:
-#        dest: ../inv.d/do
-#        content: "[do]"
-#        mode: 0644
-#      when: inv_file.stat.exists == False
-#      become: no
-#
-#    - name: Add public IP of load_balancer to DO inventory
-#      lineinfile:
-#        path: ../inv.d/do
-#        create: yes
-#        state: "{{ state | default('present') }}"
-#        line: "do1 ansible_host={{ item }} ansible_port=80 ansible_user=root"
-#        mode: 0644
-#      when: item is defined
-#      with_items: "{{ terraform_result.outputs.ip_address.value }}"
-#      become: no
-#
-#    - name: Remove DO inventory file if destroying droplets
-#      file:
-#        path: ../inv.d/do
-#        state: absent
-#      when: state | default('present') == 'absent'
-#      become: no
-#
-#    - name: Reload inventory
-#      meta: refresh_inventory
-#
-## New play based on DO inventory file
-#- name: Wait for droplet availability
-#  hosts: do
-#  remote_user: root
-#  gather_facts: no
-#
-#  tasks:
-#    - name: Debug inventory_hostname
-#      debug:
-#        var: inventory_hostname
-#
-#    - name: Wait for port 80 to become available
-#      wait_for:
-#        port: 80
-#        host: "{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}"
-#      connection: local
-#      when: state | default('present') == 'present'
-#
+        - name: Show contents of terraform_result ip_address
+          debug:
+            var: item
+          with_items:
+            - "{{ terraform_result.outputs.haproxy_public_ips.value }}"
+            - "{{ terraform_result.outputs.haproxy_private_ips.value }}"
+            - "{{ terraform_result.outputs.vault_public_ips.value }}"
+            - "{{ terraform_result.outputs.vault_private_ips.value }}"
+            - "{{ terraform_result.outputs.consul_public_ips.value }}"
+            - "{{ terraform_result.outputs.consul_private_ips.value }}"
+          when: state != 'absent'
+
+    #    - name: Check existence of DO inventory file
+    #      stat:
+    #        path: ../inv.d/do
+    #      register: inv_file
+    #      become: no
+    #
+    #    - name: Create default DO inventory file if not present
+    #      copy:
+    #        dest: ../inv.d/do
+    #        content: "[do]"
+    #        mode: 0644
+    #      when: inv_file.stat.exists == False
+    #      become: no
+    #
+    #    - name: Add public IP of load_balancer to DO inventory
+    #      lineinfile:
+    #        path: ../inv.d/do
+    #        create: yes
+    #        state: "{{ state | default('present') }}"
+    #        line: "do1 ansible_host={{ item }} ansible_port=80 ansible_user=root"
+    #        mode: 0644
+    #      when: item is defined
+    #      with_items: "{{ terraform_result.outputs.ip_address.value }}"
+    #      become: no
+    #
+    #    - name: Remove DO inventory file if destroying droplets
+    #      file:
+    #        path: ../inv.d/do
+    #        state: absent
+    #      when: state | default('present') == 'absent'
+    #      become: no
+    #
+    #    - name: Reload inventory
+    #      meta: refresh_inventory
+    #
+    ## New play based on DO inventory file
+    #- name: Wait for droplet availability
+    #  hosts: do
+    #  remote_user: root
+    #  gather_facts: no
+    #
+    #  tasks:
+    #    - name: Debug inventory_hostname
+    #      debug:
+    #        var: inventory_hostname
+    #
+    #    - name: Wait for port 80 to become available
+    #      wait_for:
+    #        port: 80
+    #        host: "{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}"
+    #      connection: local
+    #      when: state | default('present') == 'present'
+    #
+      tags:
+       - terraform
+
