@@ -18,15 +18,15 @@
     - name: Tagged block
       block:
 
-#        - name: Get localhost's internet source IP address
-#          uri:
-#            url: http://checkip.dyndns.org
-#            return_content: yes
-#          register: checkip
-#
-#        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
-#          set_fact:
-#            source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+        - name: Get localhost's internet source IP address
+          uri:
+            url: http://checkip.dyndns.org
+            return_content: yes
+          register: checkip
+
+        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+          set_fact:
+            source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
 
         - name: "Terraform {{ (state | default('present') == 'present') | ternary('create', 'destroy') }} environment"
           terraform:
