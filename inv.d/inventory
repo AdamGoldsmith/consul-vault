@@ -15,9 +15,9 @@ haproxy_master
 haproxy_standby
 
 [vault]
-vault_s1 ansible_host=10.1.42.201
-vault_s2 ansible_host=10.1.42.202
-vault_s3 ansible_host=10.1.42.203
+vault-s1 ansible_host=10.1.42.201
+vault-s2 ansible_host=10.1.42.202
+vault-s3 ansible_host=10.1.42.203
 
 [consul_client:children]
 haproxy
