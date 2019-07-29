@@ -1,7 +1,7 @@
 ---
 
 - name: Install & configure Hashicorp Consul cluster
-  hosts: consul
+  hosts: all
   become: yes
   gather_facts: yes
 
@@ -12,7 +12,7 @@
     - { role: ansible-role-consul-stop, tags: [ 'never', 'stop' ] }
 
 - name: Consul backup management
-  hosts: consul_server
+  hosts: consul
   become: no
   gather_facts: no
 
