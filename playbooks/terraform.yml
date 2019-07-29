@@ -24,7 +24,7 @@
             return_content: yes
           register: checkip
 
-        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
+        - name: "Set source IP fact ({{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }})"
           set_fact:
             source_ip: "{{ checkip.content | regex_search ('(([0-9]{1,3}\\.?){4})') }}"
 
@@ -110,5 +110,6 @@
     #      when: state | default('present') == 'present'
     #
       tags:
+       - never
        - terraform
 
