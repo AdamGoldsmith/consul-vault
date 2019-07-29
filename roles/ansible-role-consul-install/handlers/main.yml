@@ -1,0 +1,11 @@
+---
+# handlers file for ansible-role-consul-install
+
+- name: Start and enable consul systemd service
+  systemd:
+    name: "{{ consul_service }}"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  listen: "restart consul"
+

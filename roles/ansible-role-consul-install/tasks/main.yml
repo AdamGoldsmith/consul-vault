@@ -98,6 +98,11 @@
     consul_secret: "{{ lookup('password', '/dev/null length=22 chars=ascii_letters,digits,+,/')}}=="
   run_once: yes
 
+# Need to re-run setup as non-become user to get SSH_CONNECTION value
+- name: Re-run setup
+  setup:
+  become: no
+
 - name: Create consul agent configuration
   template:
     src: agent.j2
@@ -105,6 +110,7 @@
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     mode: 0640
+  notify: "restart consul"
 
 - name: Create consul systemd service config
   template:
@@ -114,11 +120,4 @@
     group: root
     mode: 0664
     force: no
-
-- name: Start and enable consul systemd service
-  systemd:
-    name: "{{ consul_service }}"
-    daemon_reload: yes
-    state: started
-    enabled: yes
 
