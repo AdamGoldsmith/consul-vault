@@ -15,7 +15,7 @@ Examples\n
 
    ./deploy.sh
 
-   Equivalent to running \"ansible-playbook playbooks/site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'\"
+   Equivalent to running \"ansible-playbook playbooks/site.yml --tags 'epel,install,terraform,init,unseal,configure,approle,sshkeysign'\"
 
 2) Stop consul service on all consul hosts
 
@@ -41,7 +41,7 @@ do
   esac
 done 2>/dev/null
 
-cmd="ansible-playbook playbooks/${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle,sshkeysign}'"
+cmd="ansible-playbook playbooks/${service:-site}.yml --tags '${tags:-epel,install,terraform,init,unseal,configure,approle,sshkeysign}'"
 
 printf "\n${cmd}\n"
 [[ -z ${norun} ]] && eval ${cmd} || printf "\n"
