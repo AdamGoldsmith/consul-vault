@@ -1,3 +1,4 @@
 *.retry
 terraform_files/*.tfstate
 terraform_files/*.tfstate.backup
+terraform_files/.terraform
