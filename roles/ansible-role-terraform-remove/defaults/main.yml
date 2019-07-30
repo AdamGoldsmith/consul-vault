@@ -1,4 +1,5 @@
 ---
 # defaults file for ansible-role-terraform-remove
 
-consul_bin_path: "/usr/bin"
+terraform_bin_path: "/usr/bin"
+
