@@ -98,11 +98,6 @@
     consul_secret: "{{ lookup('password', '/dev/null length=22 chars=ascii_letters,digits,+,/')}}=="
   run_once: yes
 
-# Need to re-run setup as non-become user to get SSH_CONNECTION value
-- name: Re-run setup
-  setup:
-  become: no
-
 - name: Create consul agent configuration
   template:
     src: agent.j2

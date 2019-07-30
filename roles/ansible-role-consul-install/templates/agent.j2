@@ -1,17 +1,17 @@
 {
-  "server": {{ 'true' if inventory_hostname in groups['consul_server'] else 'false' }},
+  "server": {{ 'true' if inventory_hostname in groups['consul'] else 'false' }},
   "node_name": "{{ inventory_hostname }}",
   "datacenter": "{{ consul_datacenter }}",
   "data_dir": "{{ consul_path }}/data",
-  "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul_server'] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
-  "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul_server'] else '127.0.0.1' }}",
-{% if inventory_hostname in groups['consul_server'] %}
-  "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
-  "bootstrap_expect": {{ groups['consul_server'] | length }},
+  "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
+  "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else '127.0.0.1' }}",
+{% if inventory_hostname in groups['consul'] %}
+  "advertise_addr": "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
+  "bootstrap_expect": {{ groups['consul'] | length }},
   "ui": true,
 {% endif %}
-  "retry_join": [{% for host in groups['consul_server'] %}
-"{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
+  "retry_join": [{% for host in groups['consul'] %}
+"{{ hostvars[host]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
   "encrypt": "{{ consul_secret }}",
