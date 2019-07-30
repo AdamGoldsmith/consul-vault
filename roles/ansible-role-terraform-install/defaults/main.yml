@@ -1,9 +1,9 @@
 ---
 # defaults file for ansible-role-terraform-install
 
-# Terraform 0.12 currently doesn't work with DigitalOcean
-#terraform_version: latest
+# Seems to be issue with number of simultaneous instance builds at terraform 12.x (latest)
 terraform_version: 0.11.14
+#terraform_version: latest
 terraform_arch: linux_amd64
 checkpoint_url: "https://checkpoint-api.hashicorp.com/v1/check/terraform"
 terraform_dependencies:
