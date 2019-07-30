@@ -117,7 +117,8 @@
 - name: Set network device variable
   set_fact:
     ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
-  when: ka_base_ip in hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
+  #when: ka_base_ip in hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
+  when: hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first == hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
 
@@ -133,6 +134,7 @@
     owner: root
     group: root
     mode: 0640
+  notify: "restart haproxy"
 
 - name: Allow HAProxy to bind to non-existent VIP at startup
   sysctl:
@@ -140,14 +142,4 @@
     value: 1
     state: present
     reload: yes
-
-- name: Start and enable HAProxy & Keepalived services
-  systemd:
-    name: "{{ item }}"
-    daemon_reload: yes
-    state: started
-    enabled: yes
-  with_items:
-    - "haproxy"
-    - "keepalived"
 
