@@ -8,7 +8,7 @@
 
   roles:
     - { role: ansible-role-terraform-remove, become: yes, tags: [ 'never', 'remove' ] }
-    - { role: ansible-role-terraform-install, become: yes, tags: [ 'install' ] }
+    - { role: ansible-role-terraform-install, become: yes, tags: [ 'terraform' ] }
 
   post_tasks:
 
@@ -64,6 +64,9 @@
         - name: Refresh dynamic inventory
           meta: refresh_inventory
 
+      tags:
+       - terraform
+
 - name: Wait for host connectivity
   hosts: all
   gather_facts: no
@@ -87,7 +90,6 @@
       when:
         - hostvars['localhost']['terraform_result']['changed'] | bool
         - hostvars['localhost']['state'] | default('present') == 'present'
-
       tags:
        - terraform
 
