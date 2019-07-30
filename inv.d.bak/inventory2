@@ -1,0 +1,56 @@
+#[controller]
+#localhost
+#
+#[controller:vars]
+#ansible_connection=local
+
+# Empty groups purposely defined, see following link
+# https://docs.ansible.com/ansible/latest/user_guide/intro_dynamic_inventory.html#static-groups-of-dynamic-groups
+[haproxy_master]
+#haproxy[0]
+
+[haproxy_standby]
+#haproxy[1]
+
+[haproxy_master_vagrant]
+haproxy-s1-vagrant ansible_host=10.1.42.11 ansible_user=vagrant
+
+[haproxy_standby_vagrant]
+haproxy-s2-vagrant ansible_host=10.1.42.12 ansible_user=vagrant
+
+[haproxy:children]
+haproxy_master
+haproxy_standby
+haproxy_master_vagrant
+haproxy_standby_vagrant
+
+[vault]
+
+[vault_vagrant]
+vault-s1-vagrant ansible_host=10.1.42.201 ansible_user=vagrant
+vault-s2-vagrant ansible_host=10.1.42.202 ansible_user=vagrant
+vault-s3-vagrant ansible_host=10.1.42.203 ansible_user=vagrant
+
+[consul_client:children]
+haproxy
+vault
+vault_vagrant
+
+[consul_server]
+
+[consul_server_vagrant]
+consul-s1-vagrant ansible_host=10.1.42.101 ansible_user=vagrant
+consul-s2-vagrant ansible_host=10.1.42.102 ansible_user=vagrant
+consul-s3-vagrant ansible_host=10.1.42.103 ansible_user=vagrant
+consul-s4-vagrant ansible_host=10.1.42.104 ansible_user=vagrant
+consul-s5-vagrant ansible_host=10.1.42.105 ansible_user=vagrant
+
+[consul:children]
+consul_client
+consul_server
+consul_server_vagrant
+
+[all:vars]
+ansible_user=root
+ansible_ssh_common_args='-o "UserKnownHostsFile /dev/null"'
+

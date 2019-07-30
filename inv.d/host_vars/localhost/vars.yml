@@ -1,2 +1,0 @@
-do_api_token: "{{ enc_do_api_token }}"
-do_ssh_keys: "{{ enc_do_ssh_keys }}"
