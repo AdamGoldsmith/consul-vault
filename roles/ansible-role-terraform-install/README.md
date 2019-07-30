@@ -8,6 +8,11 @@ Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS 7
 * Debian/Stretch64
 
+Currently tested on these cloud providers
+* DigitalOcean
+
+*__Note:__ Terraform 0.12 currently doesn't work with DigitalOcean*
+
 Requirements
 ------------
 
@@ -18,7 +23,7 @@ Role Variables
 
 defaults/main.yml
 ```
-terraform_version: latest							# Version of terraform to download (latest unless specified)
+terraform_version: 0.11.14							# Version of terraform to download (latest unless specified)
 terraform_arch: linux_amd64							# Architecture of binary to download
 checkpoint_url: "https://checkpoint-api.hashicorp.com/v1/check/terraform"	# Terraform's checkpoint URL for gathering current data
 terraform_dependencies:								# List of Terraform's software dependencies
