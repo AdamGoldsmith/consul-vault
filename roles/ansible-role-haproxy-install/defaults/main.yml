@@ -20,7 +20,7 @@ consul_services_conf: "/etc/consul/consul_services.hcl"
 consul_service: "consul"
 consul_user: "consul"
 consul_group: "consul"
-ka_base_ip: "10.1.42."
+ka_base_ip: "10.1.42.0/24"
 ka_vip: "10.1.42.10"
 ka_conf: "/etc/keepalived/keepalived.conf"
 

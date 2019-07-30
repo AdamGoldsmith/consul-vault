@@ -42,7 +42,7 @@ vault_on: "Vault"									# CSR Organization Name
 vault_privkey: "{{ vault_certs }}/{{ vault_cn | regex_replace('^www\\.', '') }}.pem"	# OpenSSL Private Key filename
 vault_csr: "{{ vault_certs }}/{{ vault_cn }}.csr"					# OpenSSL Certificate Signing Request filename
 vault_certfile: "{{ vault_certs }}/{{ vault_cn | regex_replace('^www\\.', '') }}.crt"	# OpenSSL Certificate filename
-vault_base_ip: "10.1.42."								# Vault subnet
+vault_base_ip: "10.1.42.0/24"								# Vault subnet
 vault_addr: "{{ ansible_fqdn }}"							# Vault listener address
 vault_port: "8200"									# Vault listener port
 vault_cluster_port: "8201"								# Vault cluster port
