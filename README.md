@@ -72,7 +72,9 @@ Getting the code
 Running the deployment
 ----------------------
 
-*Vagrant (Currently not working under terraform branch)*
+*Vagrant*
+
+On VirtualBox host
 
 ```
 cd vagrant
@@ -93,7 +95,7 @@ __To deploy__
 
 or
 
-`ansible-playbook playbooks/site.yml -i inv.d/do --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
+`ansible-playbook playbooks/site.yml -i inv.d/do --tags 'epel,install,terraform,init,unseal,configure,approle,sshkeysign'`
 
 __To remove__
 
