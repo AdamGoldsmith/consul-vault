@@ -9,3 +9,4 @@ vault_user: "vault"
 vault_group: "vault"
 vault_service: "vault"
 vault_keysfile: "~/.hashicorp_vault_keys.json"
+
