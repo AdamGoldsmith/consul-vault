@@ -1,68 +1,83 @@
 ---
 # tasks file for ansible-role-terraform-install
 
-- name: Install dependencies
-  package:
-    name: "{{ terraform_dependencies }}"
-    state: present
+- name: Check for installed terraform binary
+  stat:
+    path: "{{ terraform_bin_path }}/terraform"
+  register: stat_terraform
+
+- name: Get installed terraform version
+  command: "{{ terraform_bin_path }}/terraform --version"
+  register: version_terraform_installed
+  when:
+    - stat_terraform['stat']['exists'] | bool
+    - stat_terraform['stat']['mimetype'] == "application/x-executable"
+
+- name: Set installed terraform version
+  set_fact:
+    tf_installed_version: "{{ version_terraform_installed['stdout'] | regex_search('^Terraform\\s+v(\\d+\\.\\d+\\.\\d+(?:-(?:rc|alpha|beta)?\\d+)?)', '\\1') | first }}"
+  when:
+    - version_terraform_installed['skipped'] is not defined
 
 - name: Get latest terraform version information
   uri:
     url: "{{ checkpoint_url }}"
   register: terraform_data
-  run_once: yes
-  delegate_to: localhost
 
 - name: Setting version fact
   set_fact:
     terraform_version: "{{ terraform_data.json.current_version }}"
   when: terraform_version == "latest"
-  run_once: yes
-  delegate_to: localhost
 
-- name: Setting terraform download URL
-  set_fact:
-    terraform_download: "{{ terraform_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ terraform_version }}/"
-  run_once: yes
-  delegate_to: localhost
+- name: Display terraform version information
+  debug:
+    msg:
+     - "Terraform Installed Version: {{ tf_installed_version | default('none') }}"
+     - " Terraform Required Version: {{ terraform_version }}"
 
-- name: Getting terraform chksums
-  uri:
-    url: "{{ terraform_download }}terraform_{{ terraform_version }}_SHA256SUMS"
-    return_content: yes
-  register: terraform_shasums
-  run_once: yes
-  delegate_to: localhost
+- name: Block when installed and desired terraform versions differ
+  block:
 
-- name: Set chksum search pattern
-  set_fact:
-    pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ terraform_arch }}.zip"
-  run_once: yes
-  delegate_to: localhost
+    - name: Install dependencies
+      package:
+        name: "{{ terraform_dependencies }}"
+        state: present
 
-- name: Set terraform_chksum fact
-  set_fact:
-    terraform_chksum: "sha256:{{ terraform_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
-  run_once: yes
-  delegate_to: localhost
+    - name: Setting terraform download URL
+      set_fact:
+        terraform_download: "{{ terraform_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ terraform_version }}/"
 
-- name: Download terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
-  get_url:
-    url: "{{ terraform_download }}terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
-    checksum: "{{ terraform_chksum }}"
-    dest: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
-    force: yes
-    owner: root
-    group: root
+    - name: Getting terraform chksums
+      uri:
+        url: "{{ terraform_download }}terraform_{{ terraform_version }}_SHA256SUMS"
+        return_content: yes
+      register: terraform_shasums
 
-- name: Unzip terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
-  unarchive:
-    src: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
-    remote_src: yes
-    dest: "{{ terraform_bin_path }}"
-    creates: "{{ terraform_bin_path }}/terraform"
-    owner: root
-    group: root
-    mode: 0755
-    keep_newer: true
+    - name: Set chksum search pattern
+      set_fact:
+        pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ terraform_arch }}.zip"
+
+    - name: Set terraform_chksum fact
+      set_fact:
+        terraform_chksum: "sha256:{{ terraform_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
+
+    - name: Download terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
+      get_url:
+        url: "{{ terraform_download }}terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+        checksum: "{{ terraform_chksum }}"
+        dest: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+        force: yes
+        owner: root
+        group: root
+
+    - name: Unzip terraform binary (terraform_{{ terraform_version }}_{{ terraform_arch }}.zip)
+      unarchive:
+        src: "/tmp/terraform_{{ terraform_version }}_{{ terraform_arch }}.zip"
+        dest: "{{ terraform_bin_path }}"
+        owner: root
+        group: root
+        mode: 0755
+
+  when:
+    - tf_installed_version | default('none') != terraform_version
 
