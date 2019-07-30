@@ -5,7 +5,7 @@ USAGE="Usage : ${scriptname} [-s <service>] [-t tag1,tag2,tag3] [-h]"
 HELP="Deploy, manage or destroy HA consul + vault environment.
 
 ${USAGE}\n
-  -s = Service name [consul|vault] (Optional - both if omitted)
+  -s = Service name [consul|vault|haproxy] (Optional - both if omitted)
   -t = Tags [tag1,tag2,tag3] (Optional - all necessary tags for full deployment if omitted)
   -n = No execution, just display the ansible command that would run
   -h = Show usage
