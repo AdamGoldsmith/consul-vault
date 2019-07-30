@@ -21,17 +21,48 @@ Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS 7 (Note: Enables EPEL repo using Jeff Geerling's [EPEL role](<https://galaxy.ansible.com/geerlingguy/repo-epel/>))
 * Debian/Stretch64
 
+Terraform currently tested on these cloud providers
+* DigitalOcean
+
 Requirements
 ------------
 
 * Hashicorp Vagrant
+* Hashicorp Terraform (*installed from ansible playbooks*)
 * Ansible 2.5 or higher
 
 Dependencies
 ------------
 
 * Requires elevated root privileges
-* Copy Ansible control machine user's public SSH key (usually called id_rsa.pub) into the vagrant working directory
+* Vagrant - Copy Ansible control machine user's public SSH key (usually called id_rsa.pub) into the vagrant working directory
+* Terraform (DigitalOcean) - Export DO_API_TOKEN & DO_SSH_KEYS environment variables (see below for helpful tips and env source file)
+
+*DigitalOcean Environment Variables*
+
+First you will need to create a DigitalOcean "Personal Access Token" by following these [instructions](https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-api-v2#HowToGenerateaPersonalAccessToken)
+
+Then you will need the fingerprint of your private SSH key you will use to connect to the droplets. This can be done in a couple of ways:
+1. Login in to digitalocean website, navigate to account, security and copy the appropriate key's fingerprint
+2. Generate the fingerprint by running the following command against the local private key
+
+```
+ssh-keygen -E md5 -lf ~/.ssh/id_rsa.pub | awk '{print substr($2,5)}'
+```
+
+Now create a helpful environment source file
+
+`vi ~/do_rc.sh`
+
+```
+export DO_API_TOKEN="53fb6cddc2db7b1d293c30b1c8fe37da1908f7a8bb82ec14d9ca4eacca6c3fa5"
+export DO_SSH_KEYS="3a:92:29:fc:a0:8d:77:d7:d3:01:80:c7:cc:fd:9c:71"
+```
+
+Source this env file before running the ansible playbooks
+
+`source ~/do_rc.sh`
+
 
 Getting the code
 ----------------
@@ -41,10 +72,18 @@ Getting the code
 Running the deployment
 ----------------------
 
+*Vagrant (Currently not working under terraform branch)*
+
 ```
 cd vagrant
 vagrant up
 ```
+
+On the Ansible Control Machine  
+
+`ansible-playbook playbooks/site.yml -i inv.d/vagrant --skip-tags 'terraform'`
+
+*Terraform*
 
 On the Ansible Control Machine  
 
@@ -54,7 +93,7 @@ __To deploy__
 
 or
 
-`ansible-playbook playbooks/site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
+`ansible-playbook playbooks/site.yml -i inv.d/do --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
 
 __To remove__
 
@@ -71,6 +110,8 @@ Known Issues
 
 If you get the message "You need to have PyOpenSSL>=0.15 to generate CSRs", then it is most likely an issue with the OpenSSL package that python has imported. When pyOpenSSL is installed/upgraded via the PIP Ansible module in this playbok, it will install the python package under /usr/lib/pythonx.x/site-packages, however it is possible that another OpenSSL python package could be installed under /usr/lib64/pythonx.x/site-packages that is being loaded in preference to the higher-level package.  
 In order to prevent this happening, temporarily move the directory "/usr/lib64/pythonx.x/site-packages/OpenSSL" out of the way while running this playbook.  
+
+When testing terraform with DigitalOcean cloud provider, I would sometimes see a limited number of instances being created simultaneously. For example, I was testing with creating 7 instances (3 x consul, 2 x vault, 2 x haproxy), and often only 6 instances would get created. I do not know if this was a terraform or DigitalOcean bug/limitation. I originally thought it was happening after upgrading from terraform 0.11.14 to 0.12.x (hashicorp's latest major version at time of writing), but I have seen this issue with 0.11.14 too. If this happens, just re-run the ansible playbook and it will add the missing instance(s) to the environment.
 
 License
 -------
