@@ -2,7 +2,11 @@
   "service": {
     "name": "{{ haproxy_service }}",
     "port": 8101,
+{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+    "address": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(ka_base_ip) | first }}",
+{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
     "address": "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
+{% endif %}
     "check": {
       "http": "http://127.0.0.1:8101/health_check",
       "interval": "10s"

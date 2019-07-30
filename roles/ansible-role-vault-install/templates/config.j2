@@ -2,7 +2,11 @@ ui=true
 
 listener "tcp" {
   address          = "0.0.0.0:{{ vault_port }}"
-  cluster_address  = "{{  hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
+{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+  cluster_address  = "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_cluster_port }}"
+{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+  cluster_address  = "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
+{% endif %}
   tls_disable      = "{{ tls_disable }}"
   tls_key_file     = "{{ vault_privkey }}"
   tls_cert_file    = "{{ vault_certfile }}"
@@ -13,6 +17,11 @@ storage "consul" {
   path    = "{{ vault_service }}/"
 }
 
-api_addr = "http://{{  hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_port }}"
-cluster_addr = "https://{{  hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
+{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+api_addr = "http://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_port }}"
+cluster_addr = "https://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_cluster_port }}"
+{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+api_addr = "http://{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_port }}"
+cluster_addr = "https://{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
+{% endif %}
 

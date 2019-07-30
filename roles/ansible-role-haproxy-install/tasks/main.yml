@@ -114,11 +114,29 @@
     name: "keepalived"
     state: present
 
-- name: Set network device variable
+- name: Debug vagrant ipv4
+  debug:
+    msg: "{{ hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] | ipaddr(ka_base_ip) | type_debug }}"
+  when:
+    - ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0
+  with_items:
+    - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
+
+- name: Set network device variable (vagrant)
   set_fact:
     ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
-  #when: ka_base_ip in hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
-  when: hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first == hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
+  when:
+    - ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] | ipaddr(ka_base_ip) | type_debug != "NoneType"
+  with_items:
+    - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
+
+- name: Set network device variable (do)
+  set_fact:
+    ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
+  when:
+    - ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0
+    - hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first == hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
 
