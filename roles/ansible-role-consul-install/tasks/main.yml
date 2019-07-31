@@ -16,7 +16,7 @@
 - name: Setting version fact
   set_fact:
     consul_version: "{{ consul_data.json.current_version }}"
-  when: consul_version == "latest"
+  when: consul_version | default('latest') == "latest"
   run_once: yes
   delegate_to: localhost
 

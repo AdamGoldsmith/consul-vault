@@ -27,7 +27,7 @@
 - name: Setting version fact
   set_fact:
     terraform_version: "{{ terraform_data.json.current_version }}"
-  when: terraform_version == "latest"
+  when: terraform_version | default('latest') == "latest"
 
 - name: Display terraform version information
   debug:
