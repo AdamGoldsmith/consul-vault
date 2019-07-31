@@ -3,25 +3,29 @@
   "node_name": "{{ inventory_hostname }}",
   "datacenter": "{{ consul_datacenter }}",
   "data_dir": "{{ consul_path }}/data",
-{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+{% if inventory_dir is search('vagrant') %}
   "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}",
-{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+{% elif inventory_dir is search('do') %}
   "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
 {% endif %}
   "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else '127.0.0.1' }}",
 {% if inventory_hostname in groups['consul'] %}
-{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+{% if inventory_dir is search('vagrant') %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}",
-{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+{% elif inventory_dir is search('do') %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
 {% endif %}
-  "bootstrap_expect": {{ groups['consul'] | length }},
+{% for host in groups['consul'] if hostvars[host]['inventory_dir'] == inventory_dir %}
+{% if loop.first %}
+  "bootstrap_expect": {{ loop.length }},
+{% endif %}
+{% endfor %}
   "ui": true,
 {% endif %}
-  "retry_join": [{% for host in groups['consul'] %}
-{%- if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+  "retry_join": [{% for host in groups['consul'] if hostvars[host]['inventory_dir'] == inventory_dir %}
+{%- if inventory_dir is search('vagrant') %}
 "{{ hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}"
-{%- elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+{%- elif inventory_dir is search('do') %}
 "{{ hostvars[host]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}"
 {%- endif %}
 {%- if not loop.last %}, {% endif %}

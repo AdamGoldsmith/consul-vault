@@ -126,7 +126,7 @@
   set_fact:
     ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
   when:
-    - ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0
+    - inventory_dir is search('vagrant')
     - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] | ipaddr(ka_base_ip) | type_debug != "NoneType"
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
@@ -135,7 +135,7 @@
   set_fact:
     ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
   when:
-    - ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0
+    - inventory_dir is search('do')
     - hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first == hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"

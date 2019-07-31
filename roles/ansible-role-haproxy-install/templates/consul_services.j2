@@ -2,9 +2,9 @@
   "service": {
     "name": "{{ haproxy_service }}",
     "port": 8101,
-{% if ansible_inventory_sources | map('regex_search', 'vagrant') | select('string') | list | length > 0 %}
+{% if inventory_dir is search('vagrant') %}
     "address": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(ka_base_ip) | first }}",
-{% elif ansible_inventory_sources | map('regex_search', 'do') | select('string') | list | length > 0 %}
+{% elif inventory_dir is search('do') %}
     "address": "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
 {% endif %}
     "check": {
