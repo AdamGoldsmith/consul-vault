@@ -5,7 +5,30 @@
   become: yes
   gather_facts: yes
 
+  pre_tasks:
+
+    # As tasks can be run in multiple environments split by
+    # separate inventory sources, these two tasks compiles
+    # a dictionary of vault hosts per inventory
+    - name: Create dictionary structure
+      set_fact:
+        inv_vault: "{{ inv_vault | default({}) | combine({ (hostvars[item]['inventory_dir'] | basename): [] }) }}"
+      loop: "{{ groups['vault'] }}"
+      delegate_to: localhost
+      run_once: yes
+      tags: always
+
+    - name: Append vault hosts to inventory lists in dictionary
+      set_fact:
+        inv_vault: "{{ inv_vault | combine({ item[0]['key']: inv_vault[item[0]['key']] + [item[1]] }) }}"
+      loop: "{{ inv_vault | dict2items | product(groups['vault']) | list }}"
+      when: hostvars[item[1]]['inventory_dir'] | basename == item[0]['key']
+      delegate_to: localhost
+      run_once: yes
+      tags: always
+
   roles:
+
     - { role: ansible-role-vault-remove, tags: [ 'never', 'remove' ] }
     - { role: ansible-role-repo-epel, when: ansible_os_family == 'RedHat', tags: epel }
     - { role: ansible-role-vault-install, tags: install }
