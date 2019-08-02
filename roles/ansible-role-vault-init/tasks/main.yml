@@ -38,7 +38,7 @@
   
 - name: Save keys locally
   copy:
-    content: "{{ hostvars[item['value'][0]]['vault_init']['results'][0]['json'] | to_nice_json(indent=2) }}"
+    content: "{{ hostvars[item['value'][0]]['vault_init']['results'] | selectattr('json', 'defined') | map(attribute='json') | first | to_nice_json(indent=2) }}"
     dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_keysfile }}"
     mode: 0600
   loop: "{{ inv_vault | dict2items }}"

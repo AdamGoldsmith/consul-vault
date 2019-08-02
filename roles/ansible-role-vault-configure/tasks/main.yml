@@ -96,7 +96,7 @@
     method: POST
     headers:
       # Use the newly created admin token to create the provisioner policy
-      X-Vault-Token: "{{ admin_token['results'][0]['json']['auth']['client_token'] }}"
+      X-Vault-Token: "{{ admin_token['results'] | selectattr('json', 'defined') | map(attribute='json.auth.client_token') | first }}"
     body: '{ "policies": "provisioner" }'
     body_format: json
     return_content: yes
@@ -110,7 +110,7 @@
 
 - name: Save admin token locally
   copy:
-    content: "{{ admin_token['results'][0]['json'] | to_nice_json(indent=2) }}"
+    content: "{{ admin_token['results'] | selectattr('json', 'defined') | map(attribute='json') | first | to_nice_json(indent=2) }}"
     dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_admintokenfile }}"
     mode: 0600
   delegate_to: localhost
@@ -124,7 +124,7 @@
 
 - name: Save provisioner token locally
   copy:
-    content: "{{ provisioner_token['results'][0]['json'] | to_nice_json(indent=2) }}"
+    content: "{{ provisioner_token['results'] | selectattr('json', 'defined') | map(attribute='json') | first | to_nice_json(indent=2) }}"
     dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_provisionertokenfile }}"
     mode: 0600
   delegate_to: localhost
