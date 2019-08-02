@@ -65,16 +65,6 @@
   delegate_to: localhost
   run_once: yes
 
-# TODO: Remove
-#- name: Debug URL
-#  debug:
-#    msg: "http://{{ hostvars[inv_consul[item['key']][0]]['ansible_host'] | default(hostvars[inv_consul[item['key']][0]]['inventory_hostname']) }}:{{ consul_port }}/v1/kv/vault?recurse"
-#  loop: "{{ inv_vault | dict2items }}"
-#  when:
-#    - inventory_dir | basename == item['key']
-#    - inventory_hostname == item['value'][0]
-#  become: no
-
 # Required to prevent leftover data in consul kv store
 # This step is powerful enough to destroy vault data - it needs securing with ACLs!
 - name: Clear down consul backend data
