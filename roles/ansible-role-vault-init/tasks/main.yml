@@ -42,9 +42,11 @@
     dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_keysfile }}"
     mode: 0600
   loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   # TODO: Remove comment
   #no_log: yes
   delegate_to: localhost
-  run_once: yes
 
