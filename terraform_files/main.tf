@@ -22,7 +22,7 @@ resource "digitalocean_tag" "consul" {
 resource "digitalocean_droplet" "haproxy" {
   count              = 2
   image              = "centos-7-x64"
-  name               = "haproxy-s${count.index+1}"
+  name               = "haproxy-do-s${count.index+1}"
   region             = "lon1"
   size               = "s-1vcpu-1gb"
   private_networking = "true"
@@ -32,7 +32,7 @@ resource "digitalocean_droplet" "haproxy" {
 resource "digitalocean_droplet" "vault" {
   count              = 2
   image              = "centos-7-x64"
-  name               = "vault-s${count.index+1}"
+  name               = "vault-do-s${count.index+1}"
   region             = "lon1"
   size               = "s-1vcpu-1gb"
   private_networking = "true"
@@ -42,7 +42,7 @@ resource "digitalocean_droplet" "vault" {
 resource "digitalocean_droplet" "consul" {
   count              = 3
   image              = "centos-7-x64"
-  name               = "consul-s${count.index+1}"
+  name               = "consul-do-s${count.index+1}"
   region             = "lon1"
   size               = "s-1vcpu-1gb"
   private_networking = "true"
