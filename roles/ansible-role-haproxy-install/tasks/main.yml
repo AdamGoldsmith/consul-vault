@@ -131,11 +131,11 @@
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
 
-- name: Set network device variable (do)
+- name: Set network device variable (digitalocean)
   set_fact:
     ka_dev: "{{ [hostvars[inventory_hostname]['ansible_' + item]['device']] | join('') }}"
   when:
-    - inventory_dir is search('do')
+    - inventory_dir is search('digitalocean')
     - hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first == hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address']
   with_items:
     - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"

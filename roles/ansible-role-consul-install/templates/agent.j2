@@ -5,14 +5,14 @@
   "data_dir": "{{ consul_path }}/data",
 {% if inventory_dir is search('vagrant') %}
   "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}",
-{% elif inventory_dir is search('do') %}
+{% elif inventory_dir is search('digitalocean') %}
   "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
 {% endif %}
   "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups['consul'] else '127.0.0.1' }}",
 {% if inventory_hostname in groups['consul'] %}
 {% if inventory_dir is search('vagrant') %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}",
-{% elif inventory_dir is search('do') %}
+{% elif inventory_dir is search('digitalocean') %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}",
 {% endif %}
 {% for host in groups['consul'] if hostvars[host]['inventory_dir'] == inventory_dir %}
@@ -25,7 +25,7 @@
   "retry_join": [{% for host in groups['consul'] if hostvars[host]['inventory_dir'] == inventory_dir %}
 {%- if inventory_dir is search('vagrant') %}
 "{{ hostvars[host]['ansible_all_ipv4_addresses'] | ipaddr(consul_base_ip) | first }}"
-{%- elif inventory_dir is search('do') %}
+{%- elif inventory_dir is search('digitalocean') %}
 "{{ hostvars[host]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}"
 {%- endif %}
 {%- if not loop.last %}, {% endif %}

@@ -4,7 +4,7 @@ listener "tcp" {
   address          = "0.0.0.0:{{ vault_port }}"
 {% if inventory_dir is search('vagrant') %}
   cluster_address  = "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_cluster_port }}"
-{% elif inventory_dir is search('do') %}
+{% elif inventory_dir is search('digitalocean') %}
   cluster_address  = "{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
 {% endif %}
   tls_disable      = "{{ tls_disable }}"
@@ -20,7 +20,7 @@ storage "consul" {
 {% if inventory_dir is search('vagrant') %}
 api_addr = "http://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_port }}"
 cluster_addr = "https://{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | ipaddr(vault_base_ip) | first }}:{{ vault_cluster_port }}"
-{% elif inventory_dir is search('do') %}
+{% elif inventory_dir is search('digitalocean') %}
 api_addr = "http://{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_port }}"
 cluster_addr = "https://{{ hostvars[inventory_hostname]['do_networks']['v4'] | selectattr('type', 'equalto', 'private') | map(attribute='ip_address') | first }}:{{ vault_cluster_port }}"
 {% endif %}
