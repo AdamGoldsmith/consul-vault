@@ -28,8 +28,6 @@
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
   failed_when:
     - result['status'] not in [204]
     - "'existing mount at ' not in result['content']"
@@ -52,8 +50,6 @@
   become: no
   register: result
   # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
   failed_when:
     - result['status'] not in [200]
     - "'keys are already configured; delete them before reconfiguring' not in result['content']"
@@ -76,8 +72,6 @@
   become: no
   register: result
   # Don't fail if "path is already in use" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 204 and 'path is already in use' not in result.content"
   failed_when:
     - result['status'] not in [204]
     - "'path is already in use' not in result['content']"
@@ -100,8 +94,6 @@
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
   failed_when:
     - result['status'] not in [204]
     - "'existing mount at ' not in result['content']"
@@ -124,8 +116,6 @@
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
   failed_when:
     - result['status'] not in [204]
     - "'existing mount at ' not in result['content']"
@@ -148,8 +138,6 @@
   become: no
   register: result
   # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
   failed_when:
     - result['status'] not in [200]
     - "'keys are already configured; delete them before reconfiguring' not in result['content']"
@@ -172,8 +160,6 @@
   become: no
   register: result
   # Don't fail if "path is already in use" message appears
-  # TODO: Remove old failed_when check
-  #failed_when: "result.status != 204 and 'path is already in use' not in result.content"
   failed_when:
     - result['status'] not in [204]
     - "'path is already in use' not in result['content']"

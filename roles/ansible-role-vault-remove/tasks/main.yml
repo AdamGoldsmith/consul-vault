@@ -1,7 +1,6 @@
 ---
 # tasks file for ansible-role-vault-remove
 
-
 - name: Remove VAULT_ADDR profile
   file:
     path: /etc/profile.d/vault.sh
@@ -14,8 +13,6 @@
     enabled: no
   register: command_result
   # Prevent Ansible failing when trying to stop a service that doesn't exist
-  # TODO: Remove old failed_when check
-  #failed_when: "command_result is failed and ('find' not in command_result.msg and 'found' not in command_result.msg)"
   failed_when:
     - command_result is failed
     - "('find' not in command_result['msg'] and 'found' not in command_result['msg'])"
@@ -93,8 +90,6 @@
   become: no
   register: clear_result
   # Do not fail if consul has been removed already
-  # TODO: Remove old failed_when check
-  #failed_when: clear_result.status != 200 and 'Errno 111' not in clear_result.msg 
   failed_when:
     - clear_result['status'] not in [200]
     - "'Errno 111' not in clear_result['msg']"
