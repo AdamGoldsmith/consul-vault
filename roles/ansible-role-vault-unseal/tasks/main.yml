@@ -8,22 +8,20 @@
 
 - name: Retrieve keys locally
   set_fact:
-    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
-  delegate_to: localhost
+    vault_keys: "{{ vault_keys | default({}) | combine( { item['key']: lookup('file', vault_keysdir | default('~') + '/' +  item['key'] + '/' + vault_keysfile) | from_json } ) }}"
+  loop: "{{ inv_vault | dict2items }}"
   become: no
+  # TODO: Remove comment
+  #no_log: yes
+  delegate_to: localhost
   run_once: yes
 
-- name: Unseal vault
-  uri:
-    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/unseal"
-    validate_certs: no
-    method: PUT
-    body: "{ 'key':'{{ item }}' }"
-    body_format: json
-    return_content: yes
-    status_code: 200
-  # Pick threshold number of random keys from keys list
-  with_items: "{{ (vault_keys['keys'] | shuffle) [:key_threshold] }}"
+- name: Loop unseal tasks for each environment
+  include_tasks: unseal.yml
+  #loop: "{{ hostvars['localhost']['inv_vault'] | dict2items }}"
+  # Using with_dict as include_tasks doesn't accept the loop equivalent!
+  with_dict: "{{ inv_vault }}"
+  loop_control:
+    loop_var: inv_loop
   become: no
-  no_log: yes
 

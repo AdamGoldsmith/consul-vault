@@ -3,9 +3,11 @@
 
 - name: Retrieve keys locally
   set_fact:
-    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
-  delegate_to: localhost
+    vault_keys: "{{ vault_keys | default({}) | combine( { item['key']: lookup('file', vault_keysdir | default('~') + '/' +  item['key'] + '/' + vault_keysfile) | from_json } ) }}"
+  loop: "{{ inv_vault | dict2items }}"
   become: no
+  no_log: yes
+  delegate_to: localhost
   run_once: yes
 
 - name: Enable SSH engine at {{ ssh_client }}
@@ -14,16 +16,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'existing mount at ' not in result['content']"
 
 - name: Generate CA for {{ ssh_client }}
   uri:
@@ -31,16 +40,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','ca_config.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
-  failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
+  failed_when:
+    - result['status'] not in [200]
+    - "'keys are already configured; delete them before reconfiguring' not in result['content']"
 
 - name: Create role for signing client public SSH keys {{ sshrole_name }}
   uri:
@@ -48,16 +64,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','sshrole_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "path is already in use" message appears
-  failed_when: "result.status != 204 and 'path is already in use' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 204 and 'path is already in use' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'path is already in use' not in result['content']"
 
 - name: Enable SSH engine at {{ ssh_host }}
   uri:
@@ -65,16 +88,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'existing mount at ' not in result['content']"
 
 - name: Tune SSH engine at {{ ssh_host }}
   uri:
@@ -82,16 +112,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','ssh_host_tune.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "existing mount at" message appears
-  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'existing mount at ' not in result['content']"
 
 - name: Generate CA for {{ ssh_host }}
   uri:
@@ -99,16 +136,23 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','ca_config.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "keys are already configured; delete them before reconfiguring" message appears
-  failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 200 and 'keys are already configured; delete them before reconfiguring' not in result.content"
+  failed_when:
+    - result['status'] not in [200]
+    - "'keys are already configured; delete them before reconfiguring' not in result['content']"
 
 - name: Create role for signing host public SSH keys {{ hostrole_name }}
   uri:
@@ -116,14 +160,21 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','hostrole_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: result
   # Don't fail if "path is already in use" message appears
-  failed_when: "result.status != 204 and 'path is already in use' not in result.content"
-  run_once: yes
+  # TODO: Remove old failed_when check
+  #failed_when: "result.status != 204 and 'path is already in use' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'path is already in use' not in result['content']"
 

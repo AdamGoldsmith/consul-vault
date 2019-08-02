@@ -6,6 +6,7 @@
     name: "{{ vault_service }}"
     state: started
 
+# To be run on only one vault host for each inventory source
 - name: Initialise vault
   uri:
     url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/init"
@@ -16,18 +17,34 @@
     body_format: json
     return_content: yes
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
+  # TODO: Remove comment
+  #no_log: yes
   register: vault_init
-  run_once: yes
 
+- name: Create keys directories
+  file:
+    path: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}"
+    state: directory
+    mode: 0700
+  loop: "{{ inv_vault | dict2items }}"
+  become: no
+  delegate_to: localhost
+  run_once: yes
+  
 - name: Save keys locally
   copy:
-    content: "{{ vault_init.json }}"
-    dest: "{{ vault_keysfile }}"
+    content: "{{ hostvars[item['value'][0]]['vault_init']['results'][0]['json'] | to_nice_json(indent=2) }}"
+    dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_keysfile }}"
     mode: 0600
-  delegate_to: localhost
+  loop: "{{ inv_vault | dict2items }}"
   become: no
-  no_log: yes
-  when: vault_init is not skipped
+  # TODO: Remove comment
+  #no_log: yes
+  delegate_to: localhost
   run_once: yes
 

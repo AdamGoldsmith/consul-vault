@@ -13,7 +13,12 @@
     enabled: no
   register: command_result
   # Prevent Ansible failing when trying to stop a service that doesn't exist
-  failed_when: "command_result is failed and ('find' not in command_result.msg and 'found' not in command_result.msg)"
+  # TODO: Remove old failed_when check
+  #failed_when: "command_result is failed and ('find' not in command_result.msg and 'found' not in command_result.msg)"
+  failed_when:
+    - command_result is failed
+    - "('find' not in command_result['msg'] and 'found' not in command_result['msg'])"
+    - "'path is already in use' not in result['content']"
 
 - name: Delete vault systemd service config
   file:
@@ -58,5 +63,9 @@
   run_once: yes
   register: clear
   # Do not fail if consul has been removed already
-  failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
+  # TODO: Remove old failed_when check
+  #failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
+  failed_when:
+    - clear['status'] not in [200]
+    - "'Errno 111' not in clear['msg']"
 

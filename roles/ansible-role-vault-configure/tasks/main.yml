@@ -11,9 +11,11 @@
 
 - name: Retrieve keys locally
   set_fact:
-    vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
-  delegate_to: localhost
+    vault_keys: "{{ vault_keys | default({}) | combine( { item['key']: lookup('file', vault_keysdir | default('~') + '/' +  item['key'] + '/' + vault_keysfile) | from_json } ) }}"
+  loop: "{{ inv_vault | dict2items }}"
   become: no
+  no_log: yes
+  delegate_to: localhost
   run_once: yes
 
 - name: Enable auditing to file
@@ -22,7 +24,7 @@
     validate_certs: no
     method: PUT
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: "{{ lookup('template','audit_params.j2') }}"
     body_format: json
     return_content: yes
@@ -30,7 +32,9 @@
   become: no
   register: result
   # Don't fail if "path is already in use" message appears
-  failed_when: "result.status != 204 and 'path already in use' not in result.content"
+  failed_when:
+    - result['status'] not in [204]
+    - "'path already in use' not in result['content']"
 
 - name: Create admin policy
   uri:
@@ -38,14 +42,17 @@
     validate_certs: no
     method: PUT
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
-# This simple line took me 2 days to get working, I felt that needed mentioning!
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
+    # This simple line took me 2 days to get working, I felt that needed mentioning!
     body: { "policy": "{{ lookup('file','policy-admin.hcl') }}" }
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
-  run_once: yes
 
 - name: Create provisioner policy
   uri:
@@ -53,13 +60,16 @@
     validate_certs: no
     method: PUT
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: { "policy": "{{ lookup('file','policy-provisioner.hcl') }}" }
     body_format: json
     return_content: yes
     status_code: 204
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
-  run_once: yes
 
 - name: Create and capture admin token
   uri:
@@ -67,14 +77,17 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ vault_keys[inventory_dir | basename]['root_token'] }}"
     body: '{ "policies": "admin" }'
     body_format: json
     return_content: yes
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: admin_token
-  run_once: yes
 
 - name: Create and capture provisioner token
   uri:
@@ -82,26 +95,44 @@
     validate_certs: no
     method: POST
     headers:
-# Use the newly created admin token to create the provisioner policy
-      X-Vault-Token: "{{ admin_token['json']['auth']['client_token'] }}"
+      # Use the newly created admin token to create the provisioner policy
+      X-Vault-Token: "{{ admin_token['results'][0]['json']['auth']['client_token'] }}"
     body: '{ "policies": "provisioner" }'
     body_format: json
     return_content: yes
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
   register: provisioner_token
-  run_once: yes
 
-- name: Save tokens locally
+- name: Save admin token locally
   copy:
-    content: "{{ item[0] }}"
-    dest: "{{ item[1] }}"
+    content: "{{ admin_token['results'][0]['json'] | to_nice_json(indent=2) }}"
+    dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_admintokenfile }}"
     mode: 0600
   delegate_to: localhost
   become: no
-  no_log: yes
-  with_list:
-    - [ "{{ admin_token['json'] }}", "{{ vault_admintokenfile }}" ]
-    - [ "{{ provisioner_token['json'] }}", "{{ vault_provisionertokenfile }}" ]
-  run_once: yes
+  # TODO: Remove comment
+  #no_log: yes
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
+
+- name: Save provisioner token locally
+  copy:
+    content: "{{ provisioner_token['results'][0]['json'] | to_nice_json(indent=2) }}"
+    dest: "{{ vault_keysdir | default('~') }}/{{ item['key'] }}/{{ vault_provisionertokenfile }}"
+    mode: 0600
+  delegate_to: localhost
+  become: no
+  # TODO: Remove comment
+  #no_log: yes
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
 
