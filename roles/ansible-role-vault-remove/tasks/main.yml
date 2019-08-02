@@ -1,6 +1,7 @@
 ---
 # tasks file for ansible-role-vault-remove
 
+
 - name: Remove VAULT_ADDR profile
   file:
     path: /etc/profile.d/vault.sh
@@ -18,7 +19,7 @@
   failed_when:
     - command_result is failed
     - "('find' not in command_result['msg'] and 'found' not in command_result['msg'])"
-    - "'path is already in use' not in result['content']"
+    - "'path is already in use' not in command_result['content']"
 
 - name: Delete vault systemd service config
   file:
@@ -51,21 +52,42 @@
     path: "{{ vault_bin_path }}/vault"
     state: absent
 
+# Get list of consul servers per inventory source
+- name: Create dictionary structure
+  set_fact:
+    inv_consul: "{{ inv_consul | default({}) | combine({ (hostvars[item]['inventory_dir'] | basename): [] }) }}"
+  loop: "{{ groups['consul'] }}"
+  delegate_to: localhost
+  run_once: yes
+
+- name: Append consul hosts to inventory lists in dictionary
+  set_fact:
+    inv_consul: "{{ inv_consul | combine({ item[0]['key']: inv_consul[item[0]['key']] + [item[1]] }) }}"
+  loop: "{{ inv_consul | dict2items | product(groups['consul']) | list }}"
+  when: hostvars[item[1]]['inventory_dir'] | basename == item[0]['key']
+  delegate_to: localhost
+  run_once: yes
+
 # Required to prevent leftover data in consul kv store
 # This step is powerful enough to destroy vault data - it needs securing with ACLs!
 - name: Clear down consul backend data
   uri:
-    url: "http://{{ hostvars[groups[consul_server_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
+    #url: "http://{{ hostvars[groups[consul_server_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
+    url: "http://{{ (hostvars[inv_consul[item['key']][0]]['ansible_host'] | default('not-ip') | ipaddr) | ternary(hostvars[inv_consul[item['key']][0]]['ansible_host'], hostvars[inv_consul[item['key']][0]]['inventory_hostname']) }}:{{ consul_port }}/v1/kv/vault?recurse"
     validate_certs: no
     method: DELETE
     status_code: 200
+  loop: "{{ inv_vault | dict2items }}"
+  when:
+    - inventory_dir | basename == item['key']
+    - inventory_hostname == item['value'][0]
   become: no
-  run_once: yes
-  register: clear
+  #run_once: yes
+  register: clear_result
   # Do not fail if consul has been removed already
   # TODO: Remove old failed_when check
-  #failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
+  #failed_when: clear_result.status != 200 and 'Errno 111' not in clear_result.msg 
   failed_when:
-    - clear['status'] not in [200]
-    - "'Errno 111' not in clear['msg']"
+    - clear_result['status'] not in [200]
+    - "'Errno 111' not in clear_result['msg']"
 
