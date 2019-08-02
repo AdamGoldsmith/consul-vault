@@ -30,7 +30,8 @@ vault_certfile: "{{ vault_certs }}/{{ansible_fqdn | regex_replace('^www\\.', '')
 vault_user: "vault"										# User to run the vault systemd service
 vault_group: "vault"										# Group for vault user
 vault_service: "vault"										# Name of the vault systemd service
-vault_keysfile: "~/.hashicorp_vault_keys.json"							# Local file storing master key shards
+vault_keysdir: "~"										# Base directory for storing vault keys
+vault_keysfile: ".hashicorp_vault_keys.json"							# Local file storing master key shards
 ```
 
 Dependencies

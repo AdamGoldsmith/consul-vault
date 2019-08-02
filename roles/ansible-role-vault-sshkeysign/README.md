@@ -22,7 +22,8 @@ defaults/main.yml
 ```
 vault_addr: "{{ ansible_fqdn }}"			# Vault listener address
 vault_port: "8200"					# Vault listener port
-vault_keysfile: "~/.hashicorp_vault_keys.json"		# Local file storing master key shards
+vault_keysdir: "~"					# Base directory for storing vault keys
+vault_keysfile: ".hashicorp_vault_keys.json"		# Local file storing master key shards
 ssh_client: "ssh-client-signer"				# SSH client signining secret engine name
 sshrole_name: "sshrole"					# SSH client signing role name
 default_user: "ansible"					# SSH client signing default user

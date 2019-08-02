@@ -25,7 +25,8 @@ vault_addr: "{{ ansible_fqdn }}"							# Vault listener address
 vault_port: "8200"									# Vault listener port
 vault_user: "vault"									# User to run the vault systemd service
 vault_group: "vault"									# Group for vault user
-vault_keysfile: "~/.hashicorp_vault_keys.json"						# Local file storing master key shards
+vault_keysdir: "~"									# Base directory for storing vault keys
+vault_keysfile: ".hashicorp_vault_keys.json"						# Local file storing master key shards
 vault_admintokenfile									# Local file storing admin token
 vault_provisionertokenfile								# Local file storing provisioner token
 audit_path: "/var/log/vault"								# Audit log file directory
