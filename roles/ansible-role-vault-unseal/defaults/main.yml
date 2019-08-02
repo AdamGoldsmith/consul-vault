@@ -4,5 +4,7 @@
 vault_addr: "{{ ansible_fqdn }}"
 vault_port: "8200"
 vault_service: "vault"
-vault_keysfile: "~/.hashicorp_vault_keys.json"
-key_threshold: 3
+vault_keysdir: "~"
+vault_keysfile: ".hashicorp_vault_keys.json"
+vault_key_threshold: 3
+

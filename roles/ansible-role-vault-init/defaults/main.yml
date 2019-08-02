@@ -8,5 +8,6 @@ vault_certfile: "{{ vault_certs }}/{{ansible_fqdn | regex_replace('^www\\.', '')
 vault_user: "vault"
 vault_group: "vault"
 vault_service: "vault"
-vault_keysfile: "~/.hashicorp_vault_keys.json"
+vault_keysdir: "~"
+vault_keysfile: ".hashicorp_vault_keys.json"
 

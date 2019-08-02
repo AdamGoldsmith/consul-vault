@@ -3,7 +3,8 @@
 
 vault_addr: "{{ ansible_fqdn }}"
 vault_port: "8200"
-vault_keysfile: "~/.hashicorp_vault_keys.json"
+vault_keysdir: "~"
+vault_keysfile: ".hashicorp_vault_keys.json"            
 ssh_client: "ssh-client-signer"
 ssh_host: "ssh-host-signer"
 host_max_lease_ttl: "87600h"
@@ -13,3 +14,4 @@ default_user: "ansible"
 def_lease_ttl: "10m"
 max_lease_ttl: "20m"
 allowed_domains: "localdomain,example.com"
+
