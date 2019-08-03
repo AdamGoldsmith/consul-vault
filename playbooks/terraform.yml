@@ -12,6 +12,13 @@
 
   post_tasks:
 
+    - name: Set state to absent
+      set_fact:
+        state: "absent"
+      tags:
+        - never
+        - destroy
+
     - name: Tagged block
       block:
 
@@ -66,6 +73,7 @@
 
       tags:
        - terraform
+       - destroy
 
 - name: Wait for host connectivity
   hosts: all
@@ -92,4 +100,5 @@
         - hostvars['localhost']['state'] | default('present') == 'present'
       tags:
        - terraform
+       - destroy
 
