@@ -2,19 +2,20 @@
 
 scriptname=$(basename $0)
 envfile="./env_rc.sh"		# Change this value to save using -e option every time, or populate this file to use it
-USAGE="Usage : ${scriptname} [-e env_file] [-s <service>] [-t tag1,tag2,tag3] [-i inventory file/dir] [-n] [-h]"
+USAGE="Usage : ${scriptname} [-e env_file] [-s <service>] [-t tag1,tag2,tag3] [-m tag1,tag2,tag3] [-i inventory file/dir] [-n] [-h]"
 HELP="Deploy, manage or destroy HA consul + vault environment.
 
 ${USAGE}\n
   -e = File to source for environment variables (defaults to supplied empty file [./env_rc.sh])
   -s = Service name [consul|vault|haproxy] (Optional - all if omitted)
   -t = Tags [tag1,tag2,tag3] (Optional - all necessary tags for full deployment if omitted)
+  -m = Skip [tag1,tag2,tag3] (Optional - no tags skipped if omitted)
   -i = Inventory source (defaults to ./inv.d as defined in ansible.cfg)
   -n = No execution, just display the ansible command that would run
   -h = Show usage
 
 Examples\n
-1) Deploy complete consul + vault + HAProxy environment
+1) Deploy complete consul + vault + HAProxy environment (all necessary terraform data located in defalt env file)
 
    ./deploy.sh
 
@@ -31,14 +32,21 @@ Examples\n
   ./deploy -t 'remove'
 
   Equivalent to running \"ansible-playbook playbooks/site.yml --tags 'remove'\"
+
+4) Deploy complete consul + vault + HAProxy environment on Digital Ocean only (all necessary terraform data located in defalt env file)
+
+  ./deploy.sh -i inv.d/digitalocean
+
+  Equivalent to running \"ansible-playbook playbooks/site.yml -i inv.d/digitalocean --tags 'epel,install,terraform,init,unseal,configure,approle,sshkeysign'\"
 "
 
-while getopts e:s:t:i:nh name
+while getopts e:s:t:m:i:nh name
 do
   case ${name} in
   e)	envfile=${OPTARG};;
   s)    service=${OPTARG};;
   t)	tags=${OPTARG:-};;
+  m)	skip=${OPTARG:-};;
   i)	inventory=${OPTARG};;
   n)	norun=1;;
   h)    printf "\n${HELP}\n"; exit;;
@@ -58,7 +66,8 @@ then
   exit 1
 fi
 
-cmd="ansible-playbook playbooks/${service:-site}.yml ${inventory:+"-i ${inventory} "}--tags '${tags:-epel,install,terraform,init,unseal,configure,approle,sshkeysign}'"
+#cmd="ansible-playbook playbooks/${service:-site}.yml ${inventory:+"-i ${inventory} "}--tags '${tags:-epel,install,terraform,init,unseal,configure,approle,sshkeysign}' ${skip:+"--skip-tags ${skip} "}"
+cmd="ansible-playbook playbooks/${service:-site}.yml ${inventory:+"-i ${inventory} "}${tags:+"--tags ${tags} "}${skip:+"--skip-tags ${skip} "}"
 
 printf "\n${cmd}\n"
 [[ -z ${norun} ]] && eval ${cmd} || printf "\n"
