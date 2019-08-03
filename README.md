@@ -105,7 +105,7 @@ or
 
 `ansible-playbook playbooks/site.yml --tags 'remove'`
 
-[![asciicast](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv.png)](https://asciinema.org/a/dhB4noDm88CdISBGAUGonetAv?autoplay=1&size=small&cols=140&rows=40)
+[![asciicast](https://asciinema.org/a/iNZnTvSuRbItgnfGEzGjDyw5n.png)](https://asciinema.org/a/iNZnTvSuRbItgnfGEzGjDyw5n?autoplay=1&size=small&cols=140&rows=40)
 
 Known Issues
 ------------
