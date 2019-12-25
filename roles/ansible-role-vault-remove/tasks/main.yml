@@ -50,7 +50,7 @@
 # This step is powerful enough to destroy vault data - it needs securing with ACLs!
 - name: Clear down consul backend data
   uri:
-    url: "http://{{ hostvars[groups[consul_server_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
+    url: "http://{{ hostvars[groups[consul_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
     validate_certs: no
     method: DELETE
     status_code: 200

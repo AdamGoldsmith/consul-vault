@@ -19,20 +19,12 @@ vault_s1 ansible_host=10.1.42.201
 vault_s2 ansible_host=10.1.42.202
 vault_s3 ansible_host=10.1.42.203
 
-[consul_client:children]
-haproxy
-vault
-
-[consul_server]
+[consul]
 consul-s1 ansible_host=10.1.42.101
 consul-s2 ansible_host=10.1.42.102
 consul-s3 ansible_host=10.1.42.103
 consul-s4 ansible_host=10.1.42.104
 consul-s5 ansible_host=10.1.42.105
-
-[consul:children]
-consul_client
-consul_server
 
 [all:vars]
 ansible_user=vagrant
