@@ -16,7 +16,7 @@
 - name: Disable non-local IP bindings
   sysctl:
     name: net.ipv4.ip_nonlocal_bind
-    value: 1
+    value: '1'
     state: absent
     reload: yes
 
