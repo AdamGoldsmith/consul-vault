@@ -137,7 +137,7 @@
 - name: Allow HAProxy to bind to non-existent VIP at startup
   sysctl:
     name: net.ipv4.ip_nonlocal_bind
-    value: 1
+    value: '1'
     state: present
     reload: yes
 
