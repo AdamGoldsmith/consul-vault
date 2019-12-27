@@ -46,17 +46,39 @@
     path: "{{ vault_bin_path }}/vault"
     state: absent
 
-# Required to prevent leftover data in consul kv store
+# In case just the vault service is being removed and consul is still
+# running, these steps are required to remove leftover data in kv store
+# Re-deploying vault without clearing data will cause initialization problems
+# First query consul itself to get a list of active consul servers
+# This has two benefits:
+# 1. Do not need to know/specify the consul servers within this role
+# 2. Returns true list of active consul servers
+# The only assumption here is that the service is called 'consul'
+- name: Get list of active consul servers
+  uri:
+    url: "http://127.0.0.1:{{ consul_port }}/v1/catalog/service/consul"
+    validate_certs: no
+    method: GET
+    status_code: 200
+  become: no
+  run_once: yes
+  register: consul_service_out
+  failed_when: consul_service_out.status != 200 and 'Errno 111' not in consul_service_out.msg
+
 # This step is powerful enough to destroy vault data - it needs securing with ACLs!
+# Loops through discovered consul servers
 - name: Clear down consul backend data
   uri:
-    url: "http://{{ hostvars[groups[consul_group][0]]['ansible_host'] }}:{{ consul_port }}/v1/kv/vault?recurse"
+    url: "http://{{ item['Address'] }}:{{ consul_port }}/v1/kv/vault?recurse"
     validate_certs: no
     method: DELETE
     status_code: 200
   become: no
   run_once: yes
   register: clear
+  loop: "{{ consul_service_out['json'] | default([]) }}"
+  loop_control:
+    label: "{{ item['Node'] }}"
   # Do not fail if consul has been removed already
   failed_when: clear.status != 200 and 'Errno 111' not in clear.msg 
 
