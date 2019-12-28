@@ -6,43 +6,37 @@
     name: "{{ consul_dependencies }}"
     state: present
 
-- name: Get latest consul version information
-  uri:
-    url: "{{ checkpoint_url }}"
-  register: consul_data
-  run_once: yes
-  delegate_to: localhost
+- name: Run once & delegate to localhost block
+  block:
 
-- name: Setting version fact
-  set_fact:
-    consul_version: "{{ consul_data.json.current_version }}"
-  when: consul_version == "latest"
-  run_once: yes
-  delegate_to: localhost
+    - name: Get latest consul version information
+      uri:
+        url: "{{ checkpoint_url }}"
+      register: consul_data
 
-- name: Setting consul download URL
-  set_fact:
-    consul_download: "{{ consul_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ consul_version }}/"
-  run_once: yes
-  delegate_to: localhost
+    - name: Setting version fact
+      set_fact:
+        consul_version: "{{ consul_data.json.current_version }}"
+      when: consul_version | default('latest') == "latest"
 
-- name: Getting consul chksums
-  uri:
-    url: "{{ consul_download }}consul_{{ consul_version }}_SHA256SUMS"
-    return_content: yes
-  register: consul_shasums
-  run_once: yes
-  delegate_to: localhost
+    - name: Setting consul download URL
+      set_fact:
+        consul_download: "{{ consul_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ consul_version }}/"
 
-- name: Set chksum search pattern
-  set_fact:
-    pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ consul_arch }}.zip"
-  run_once: yes
-  delegate_to: localhost
+    - name: Getting consul chksums
+      uri:
+        url: "{{ consul_download }}consul_{{ consul_version }}_SHA256SUMS"
+        return_content: yes
+      register: consul_shasums
 
-- name: Set consul_chksum fact
-  set_fact:
-    consul_chksum: "sha256:{{ consul_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
+    - name: Set chksum search pattern
+      set_fact:
+        pattern: "(?:.zip\n)?(\\w+)\\s+.*{{ consul_arch }}.zip"
+
+    - name: Set consul_chksum fact
+      set_fact:
+        consul_chksum: "sha256:{{ consul_shasums.content | regex_search(pattern,'\\1') | to_yaml }}"
+
   run_once: yes
   delegate_to: localhost
 
