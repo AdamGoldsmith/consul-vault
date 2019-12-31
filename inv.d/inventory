@@ -5,10 +5,10 @@ localhost
 ansible_connection=local
 
 [haproxy_master]
-haproxy-s1 ansible_host=10.1.42.11
+haproxy_s1 ansible_host=10.1.42.11
 
 [haproxy_standby]
-haproxy-s2 ansible_host=10.1.42.12
+haproxy_s2 ansible_host=10.1.42.12
 
 [haproxy:children]
 haproxy_master
@@ -20,11 +20,11 @@ vault_s2 ansible_host=10.1.42.202
 vault_s3 ansible_host=10.1.42.203
 
 [consul]
-consul-s1 ansible_host=10.1.42.101
-consul-s2 ansible_host=10.1.42.102
-consul-s3 ansible_host=10.1.42.103
-consul-s4 ansible_host=10.1.42.104
-consul-s5 ansible_host=10.1.42.105
+consul_s1 ansible_host=10.1.42.101
+consul_s2 ansible_host=10.1.42.102
+consul_s3 ansible_host=10.1.42.103
+consul_s4 ansible_host=10.1.42.104
+consul_s5 ansible_host=10.1.42.105
 
 [all:vars]
 ansible_user=vagrant
