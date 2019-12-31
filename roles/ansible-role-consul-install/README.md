@@ -39,6 +39,7 @@ consul_uid: "8501"							# UID of consul user
 consul_group: "consul"							# Group for consul user
 consul_gid: "8501"							# GID of consul group
 consul_service: "consul"						# Name of the consul systemd service
+ansible_consul_group: "consul"                                          # Name of the ansible consul server group
 ```
 
 Dependencies

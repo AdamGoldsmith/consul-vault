@@ -16,4 +16,5 @@ consul_uid: "8501"
 consul_group: "consul"
 consul_gid: "8501"
 consul_service: "consul"
+ansible_consul_group: "consul"
 
