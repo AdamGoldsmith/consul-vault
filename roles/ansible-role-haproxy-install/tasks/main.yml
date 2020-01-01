@@ -63,7 +63,7 @@
     shell: /sbin/nologin
     system: yes
     state: present
-    
+
 - name: Create haproxy directory structures
   file:
     path: "{{ item }}"
