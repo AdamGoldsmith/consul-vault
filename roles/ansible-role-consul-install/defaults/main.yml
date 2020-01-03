@@ -9,6 +9,7 @@ consul_dependencies:
 consul_bin_path: "/usr/bin"
 consul_path: "/var/lib/consul"
 consul_conf: "/etc/consul/consul_agent.hcl"
+consul_local_script: False
 consul_datacenter: "dc1"
 consul_base_ip: "10.1.42."
 consul_user: "consul"

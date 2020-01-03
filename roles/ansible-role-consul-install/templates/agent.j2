@@ -1,5 +1,8 @@
 {
   "server": {{ 'true' if inventory_hostname in groups[ansible_consul_group] else 'false' }},
+{% if inventory_hostname not in groups[ansible_consul_group] %}
+  "enable_local_script_checks": {{ consul_local_script | default('false') | bool }},
+{% endif %}
   "node_name": "{{ inventory_hostname }}",
   "datacenter": "{{ consul_datacenter }}",
   "data_dir": "{{ consul_path }}/data",

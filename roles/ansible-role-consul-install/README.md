@@ -32,6 +32,7 @@ consul_dependencies:							# List of Consul's software dependencies
 consul_bin_path: "/usr/bin"						# Path to install consul binary
 consul_path: "/var/lib/consul"						# The base consul directory
 consul_conf: "/etc/consul/consul_agent.hcl"				# Consul agent configuration file
+consul_local_scripts: False                                             # Use local scripts for health checks
 consul_datacenter: "dc1"						# Consul datacenter name
 consul_base_ip: "10.1.42."						# Consul subnet
 consul_user: "consul"							# User to run the consul systemd service
