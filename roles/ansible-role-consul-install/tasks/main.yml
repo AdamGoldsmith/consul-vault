@@ -91,6 +91,8 @@
   set_fact:
     consul_secret: "{{ lookup('password', '/dev/null length=22 chars=ascii_letters,digits,+,/')}}=="
   run_once: yes
+  when:
+    - consul_secret | default("") | length != 24
 
 - name: Create consul agent configuration
   template:

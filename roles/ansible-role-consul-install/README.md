@@ -41,6 +41,12 @@ consul_group: "consul"							# Group for consul user
 consul_gid: "8501"							# GID of consul group
 consul_service: "consul"						# Name of the consul systemd service
 ansible_consul_group: "consul"                                          # Name of the ansible consul server group
+
+# Following variables do not require setting if consul servers and clients are being deployed simultaneously
+# Only require values when joining consul clients to pre-existing, configured consul servers - useful for later consul client deployments
+consul_servers: []                                                      # Only set if the consul servers are already configured and available 
+consul_secret: ""                                                       # Must be supplied if joining consul clients to existing consul servers
+
 ```
 
 Dependencies

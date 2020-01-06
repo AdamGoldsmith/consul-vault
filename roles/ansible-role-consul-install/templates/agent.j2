@@ -13,10 +13,18 @@
   "bootstrap_expect": {{ groups[ansible_consul_group] | length }},
   "ui": true,
 {% endif %}
-  "retry_join": [{% for host in groups[ansible_consul_group] %}
+  "retry_join": [
+{%- if (consul_servers | default([])) | length == 0 %}
+{% for host in groups[ansible_consul_group] %}
 "{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
+{% else %}
+{% for host in consul_servers %}
+"{{ host }}"
+{%- if not loop.last %}, {% endif %}
+{% endfor %}],
+{% endif %}
   "encrypt": "{{ consul_secret }}",
   "log_level": "DEBUG",
   "enable_syslog": true,
