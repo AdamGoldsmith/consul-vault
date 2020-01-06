@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 
 scriptname=$(basename $0)
-USAGE="Usage : ${scriptname} [-s <service>] [-t tag1,tag2,tag3] [-h]"
+USAGE="Usage : ${scriptname} [-s <service>] [-t tag1,tag2,tag3] [-n] [-h]"
 HELP="Deploy, manage or destroy HA consul + vault environment.
 
 ${USAGE}\n
