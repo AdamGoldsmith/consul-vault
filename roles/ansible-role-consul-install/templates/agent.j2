@@ -1,21 +1,21 @@
 {
-  "server": {{ 'true' if inventory_hostname in groups[ansible_consul_group] else 'false' }},
-{% if inventory_hostname not in groups[ansible_consul_group] %}
+  "server": {{ 'true' if inventory_hostname in (groups[ansible_consul_group] | default([])) else 'false' }},
+{% if inventory_hostname not in (groups[ansible_consul_group] | default([])) %}
   "enable_local_script_checks": {{ consul_local_script | default('false') | bool | ternary('true', 'false') }},
 {% endif %}
   "node_name": "{{ inventory_hostname }}",
   "datacenter": "{{ consul_datacenter }}",
   "data_dir": "{{ consul_path }}/data",
-  "bind_addr": "{{ '0.0.0.0' if inventory_hostname in groups[ansible_consul_group] else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
-  "client_addr": "{{ '0.0.0.0' if inventory_hostname in groups[ansible_consul_group] else '127.0.0.1' }}",
-{% if inventory_hostname in groups[ansible_consul_group] %}
+  "bind_addr": "{{ '0.0.0.0' if inventory_hostname in (groups[ansible_consul_group] | default([])) else hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
+  "client_addr": "{{ '0.0.0.0' if inventory_hostname in (groups[ansible_consul_group] | default([])) else '127.0.0.1' }}",
+{% if inventory_hostname in (groups[ansible_consul_group] | default([])) %}
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}",
-  "bootstrap_expect": {{ groups[ansible_consul_group] | length }},
+  "bootstrap_expect": {{ (groups[ansible_consul_group] | default([])) | length }},
   "ui": true,
 {% endif %}
   "retry_join": [
 {%- if (consul_servers | default([])) | length == 0 %}
-{% for host in groups[ansible_consul_group] %}
+{% for host in (groups[ansible_consul_group] | default([])) %}
 "{{ hostvars[host]['ansible_all_ipv4_addresses'] | select('match', consul_base_ip) | list | first }}"
 {%- if not loop.last %}, {% endif %}
 {% endfor %}],
