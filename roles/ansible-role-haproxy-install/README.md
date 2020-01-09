@@ -41,8 +41,8 @@ haproxy_user: "haproxy"									# User to run the HAProxy systemd service
 haproxy_uid: "8801"									# HAProxy user ID
 haproxy_group: "haproxy"								# Group for HAProxy user
 haproxy_gid: "8801"									# HAProxy group ID
-consul_dns_port: "8600"									# Consul DNS SRV port
-vault_port: "8200"									# Vault listener port
+consul_dns_port: 8600									# Consul DNS SRV port
+vault_port: 8200									# Vault listener port
 max_vault_servers: "3"									# Max number of vault dymanic servers configured in HAProxy
 consul_services_conf: "/etc/consul/consul_services.hcl"					# Consul service definition file for HAProxy
 consul_service: "consul"								# Name of the consul systemd service

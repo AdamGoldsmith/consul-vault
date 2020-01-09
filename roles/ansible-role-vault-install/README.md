@@ -44,9 +44,9 @@ vault_csr: "{{ vault_certs }}/{{ vault_cn }}.csr"					# OpenSSL Certificate Sign
 vault_certfile: "{{ vault_certs }}/{{ vault_cn | regex_replace('^www\\.', '') }}.crt"	# OpenSSL Certificate filename
 vault_base_ip: "10.1.42."								# Vault subnet
 vault_addr: "{{ ansible_fqdn }}"							# Vault listener address
-vault_port: "8200"									# Vault listener port
-vault_cluster_port: "8201"								# Vault cluster port
-consul_port: "8500"									# Consul listener port
+vault_port: 8200									# Vault listener port
+vault_cluster_port: 8201								# Vault cluster port
+consul_port: 8500									# Consul listener port
 vault_user: "vault"									# User to run the vault systemd service
 vault_uid: "8201"									# UID of vault user
 vault_group: "vault"									# Group for vault user

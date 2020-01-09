@@ -21,7 +21,7 @@ Role Variables
 defaults/main.yml
 ```
 vault_addr: "{{ ansible_fqdn }}"			# Vault listener address
-vault_port: "8200"					# Vault listener port
+vault_port: 8200					# Vault listener port
 vault_keysfile: "~/.hashicorp_vault_keys.json"		# Local file storing master key shards
 vault_base_ip: "10.1.42."				# Vault subnet
 approle_name: "approle"					# Approle's name

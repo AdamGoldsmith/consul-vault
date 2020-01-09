@@ -24,7 +24,7 @@ Role Variables
 defaults/main.yml
 ```
 vault_addr: "{{ ansible_fqdn }}"								# Vault listener address
-vault_port: "8200"										# Vault listener port
+vault_port: 8200										# Vault listener port
 vault_certs: "/etc/vault/certs"									# Vault certificates directory
 vault_certfile: "{{ vault_certs }}/{{ansible_fqdn | regex_replace('^www\\.', '') }}.crt"	# OpenSSL Certificate filename
 vault_user: "vault"										# User to run the vault systemd service

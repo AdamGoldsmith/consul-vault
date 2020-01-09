@@ -22,7 +22,7 @@ Role Variables
 defaults/main.yml
 ```
 vault_addr: "{{ ansible_fqdn }}"							# Vault listener address
-vault_port: "8200"									# Vault listener port
+vault_port: 8200									# Vault listener port
 vault_user: "vault"									# User to run the vault systemd service
 vault_group: "vault"									# Group for vault user
 vault_keysfile: "~/.hashicorp_vault_keys.json"						# Local file storing master key shards

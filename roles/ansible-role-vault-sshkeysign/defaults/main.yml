@@ -2,7 +2,7 @@
 # defaults file for anisble-role-vault-sshkeysign
 
 vault_addr: "{{ ansible_fqdn }}"
-vault_port: "8200"
+vault_port: 8200
 vault_keysfile: "~/.hashicorp_vault_keys.json"
 ssh_client: "ssh-client-signer"
 ssh_host: "ssh-host-signer"

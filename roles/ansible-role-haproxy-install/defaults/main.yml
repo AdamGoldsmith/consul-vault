@@ -13,8 +13,8 @@ haproxy_user: "haproxy"
 haproxy_uid: "8801"
 haproxy_group: "haproxy"
 haproxy_gid: "8801"
-consul_dns_port: "8600"
-vault_port: "8200"
+consul_dns_port: 8600
+vault_port: 8200
 max_vault_servers: "3"
 consul_services_conf: "/etc/consul/consul_services.hcl"
 consul_service: "consul"
