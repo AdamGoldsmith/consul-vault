@@ -17,6 +17,13 @@ consul_uid: "8501"
 consul_group: "consul"
 consul_gid: "8501"
 consul_service: "consul"
+consul_port: 8500
+consul_server_port: 8300
+consul_serf_lan_port: 8301
+consul_serf_wan_port: 8302
+consul_grpc_port: -1
+consul_https_port: -1
+consul_dns_port: 8600
 ansible_consul_group: "consul"
 # Following variables only need setting if the consul servers are already up and running
 # If this is empty, assume an initial consul service deployment (including servers)

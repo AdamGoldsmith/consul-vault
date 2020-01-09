@@ -40,6 +40,13 @@ consul_uid: "8501"							# UID of consul user
 consul_group: "consul"							# Group for consul user
 consul_gid: "8501"							# GID of consul group
 consul_service: "consul"						# Name of the consul systemd service
+consul_port: 8500                                                       # Consul listener port
+consul_server_port: 8300                                                # Consul server RPC port
+consul_serf_lan_port: 8301                                              # Consul LAN gossip port
+consul_serf_wan_port: 8302                                              # Consul WAN gossip port (-1 to disable)
+consul_grpc_port: -1                                                    # Consul server gRPC port (-1 to disable)
+consul_https_port: -1                                                   # Consul HTTPS listener port (-1 to disable)
+consul_dns_port: 8600                                                   # Consul DNS port (-1 to disable)
 ansible_consul_group: "consul"                                          # Name of the ansible consul server group
 
 # Following variables do not require setting if consul servers and clients are being deployed simultaneously

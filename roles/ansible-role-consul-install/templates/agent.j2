@@ -13,6 +13,17 @@
   "bootstrap_expect": {{ (groups[ansible_consul_group] | default([])) | length }},
   "ui": true,
 {% endif %}
+  "ports": {
+    "server": {{ consul_server_port | default('8300') }},
+    "serf_lan": {{ consul_serf_lan_port | default('8301') }},
+{% if inventory_hostname in (groups[ansible_consul_group] | default([])) %}
+    "serf_wan": {{ consul_serf_wan_port | default('8302') }},
+    "grpc": {{ consul_grpc_port | default('-1') }},
+{% endif %}
+    "http": {{ consul_port | default('8500') }},
+    "https": {{ consul_https_port | default('-1') }},
+    "dns": {{ consul_dns_port | default('8600') }}
+  },
   "retry_join": [
 {%- if (consul_servers | default([])) | length == 0 %}
 {% for host in (groups[ansible_consul_group] | default([])) %}
