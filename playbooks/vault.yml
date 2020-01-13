@@ -6,14 +6,59 @@
   gather_facts: yes
 
   roles:
-    - { role: ansible-role-vault-remove, tags: [ 'never', 'remove' ] }
-    - { role: ansible-role-repo-epel, when: ansible_os_family == 'RedHat', tags: epel }
-    - { role: ansible-role-vault-install, tags: install }
-    - { role: ansible-role-vault-start, tags: [ 'never', 'start' ] }
-    - { role: ansible-role-vault-init, tags: init }
-    - { role: ansible-role-vault-unseal, tags: unseal }
-    - { role: ansible-role-vault-configure, tags: configure }
-    - { role: ansible-role-vault-approle, tags: approle }
-    - { role: ansible-role-vault-sshkeysign, tags: sshkeysign }
-    - { role: ansible-role-vault-stop, tags: [ 'never', 'stop' ] }
+
+    - name: Remove vault
+      role: ansible-role-vault-remove
+      tags:
+        - 'never'
+        - 'remove'
+
+    - name: Enable EPEL repo
+      role: ansible-role-repo-epel
+      when:
+        - ansible_os_family == 'RedHat'
+      tags:
+        - 'epel'
+
+    - name: Install vault
+      role: ansible-role-vault-install
+      tags:
+        - 'install'
+
+    - name: Start vault
+      role: ansible-role-vault-start
+      tags:
+        - 'never'
+        - 'start'
+
+    - name: Initialise vault
+      role: ansible-role-vault-init
+      tags:
+        - 'init'
+
+    - name: Unseal vault
+      role: ansible-role-vault-unseal
+      tags:
+        - 'unseal'
+
+    - name: Configure vault
+      role: ansible-role-vault-configure
+      tags:
+        - 'configure'
+
+    - name: Enable approle in vault
+      role: ansible-role-vault-approle
+      tags:
+        - 'approle'
+
+    - name: Enable SSH key signing in vault
+      role: ansible-role-vault-sshkeysign
+      tags:
+        - 'sshkeysign'
+
+    - name: Stop vault
+      role: ansible-role-vault-stop
+      tags:
+        - 'never'
+        - 'stop'
 

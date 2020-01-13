@@ -6,10 +6,29 @@
   gather_facts: yes
 
   roles:
-    - { role: ansible-role-consul-remove, tags: [ 'never', 'remove' ] }
-    - { role: ansible-role-consul-install, tags: install }
-    - { role: ansible-role-consul-start, tags: [ 'never', 'start' ] }
-    - { role: ansible-role-consul-stop, tags: [ 'never', 'stop' ] }
+
+    - name: Remove consul agents
+      role: ansible-role-consul-remove
+      tags:
+        - 'never'
+        - 'remove'
+
+    - name: Install consul agents
+      role: ansible-role-consul-install
+      tags:
+        - 'install'
+
+    - name: Start consul agents
+      role: ansible-role-consul-start
+      tags:
+        - 'never'
+        - 'start'
+
+    - name: Stop consul agents
+      role: ansible-role-consul-stop
+      tags:
+        - 'never'
+        - 'stop'
 
 - name: Consul backup management
   hosts: consul
@@ -17,5 +36,10 @@
   gather_facts: no
 
   roles:
-    - { role: ansible-role-consul-backup, tags: [ 'never', 'backup' ] }
+
+    - name: Backup consul server data
+      role: ansible-role-consul-backup
+      tags:
+        - 'never'
+        - 'backup'
 

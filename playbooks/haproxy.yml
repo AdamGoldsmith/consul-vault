@@ -6,9 +6,33 @@
   gather_facts: yes
 
   roles:
-    - { role: ansible-role-haproxy-remove, tags: [ 'never', 'remove' ] }
-    - { role: ansible-role-haproxy-install, tags: install }
-    - { role: ansible-role-haproxy-start, tags: [ 'never', 'start' ] }
-    - { role: ansible-role-haproxy-stop, tags: [ 'never', 'stop' ] }
-    - { role: ansible-role-haproxy-reload, tags: [ 'never', 'reload' ] }
+
+    - name: Remove HAProxy
+      role: ansible-role-haproxy-remove
+      tags:
+        - 'never'
+        - 'remove'
+
+    - name: Install HAProxy
+      role: ansible-role-haproxy-install
+      tags:
+        - 'install'
+
+    - name: Start HAProxy
+      role: ansible-role-haproxy-start
+      tags:
+        - 'never'
+        - 'start'
+
+    - name: Stop HAProxy
+      role: ansible-role-haproxy-stop
+      tags:
+        - 'never'
+        - 'stop'
+
+    - name: Reload HAProxy
+      role: ansible-role-haproxy-reload
+      tags:
+        - 'never'
+        - 'reload'
 
