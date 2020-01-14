@@ -1,9 +1,9 @@
 ---
-# tasks file for ansible-role-vault-sshkeysign
 
-- name: Retrieve keys locally
+- name: Retrieve vault keys locally
   set_fact:
     vault_keys: "{{ lookup('file','{{ vault_keysfile }}') | from_json }}"
+    admin_keys: "{{ lookup('file','{{ vault_admintokenfile }}') | from_json }}"
   delegate_to: localhost
   become: no
   run_once: yes
@@ -14,15 +14,15 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ admin_keys['auth']['client_token'] }}"
     body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
   become: no
   register: result
-  # Don't fail if "existing mount at" message appears
-  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  # Don't fail if "path is already in use at" message appears
+  failed_when: "result.status != 204 and 'path is already in use at ' not in result.content"
   run_once: yes
 
 - name: Generate CA for {{ ssh_client }}
@@ -65,15 +65,15 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ admin_keys['auth']['client_token'] }}"
     body: "{{ lookup('template','ssh_secrets_params.json.j2') }}"
     body_format: json
     return_content: yes
     status_code: 204
   become: no
   register: result
-  # Don't fail if "existing mount at" message appears
-  failed_when: "result.status != 204 and 'existing mount at ' not in result.content"
+  # Don't fail if "path is already in use at" message appears
+  failed_when: "result.status != 204 and 'path is already in use at ' not in result.content"
   run_once: yes
 
 - name: Tune SSH engine at {{ ssh_host }}
@@ -82,7 +82,7 @@
     validate_certs: no
     method: POST
     headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
+      X-Vault-Token: "{{ admin_keys['auth']['client_token'] }}"
     body: "{{ lookup('template','ssh_host_tune.json.j2') }}"
     body_format: json
     return_content: yes
@@ -126,4 +126,47 @@
   # Don't fail if "path is already in use" message appears
   failed_when: "result.status != 204 and 'path is already in use' not in result.content"
   run_once: yes
+
+- name: Create sshkeysigner policy
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/sshkeysigner"
+    validate_certs: no
+    method: PUT
+    headers:
+      X-Vault-Token: "{{ admin_keys['auth']['client_token'] }}"
+    # This simple line took me 2 days to get working, I felt that needed mentioning!
+    body: { "policy": "{{ lookup('file', 'policy-sshkeysigner.hcl') }}" }
+    body_format: json
+    return_content: yes
+    status_code: 204
+  become: no
+  run_once: yes
+
+- name: Create and capture sshkeysigner token
+  uri:
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/auth/token/create"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ admin_keys['auth']['client_token'] }}"
+    body: '{ "policies": "sshkeysigner" }'
+    body_format: json
+    return_content: yes
+    status_code: 200
+  become: no
+  no_log: yes
+  register: sshkeysigner_tokens
+  run_once: yes
+
+- name: Save tokens locally
+  copy:
+    content: "{{ item[0] }}"
+    dest: "{{ item[1] }}"
+    mode: 0600
+  delegate_to: localhost
+  become: no
+  no_log: yes
+  run_once: yes
+  loop:
+    - [ "{{ sshkeysigner_tokens['json'] }}", "{{ vault_sshkeysignertokenfile }}" ]
 

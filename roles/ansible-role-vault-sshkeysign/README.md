@@ -20,17 +20,18 @@ Role Variables
 
 defaults/main.yml
 ```
-vault_addr: "{{ ansible_fqdn }}"			# Vault listener address
-vault_port: 8200					# Vault listener port
-vault_keysfile: "~/.hashicorp_vault_keys.json"		# Local file storing master key shards
-ssh_client: "ssh-client-signer"				# SSH client signining secret engine name
-sshrole_name: "sshrole"					# SSH client signing role name
-default_user: "ansible"					# SSH client signing default user
-def_lease_ttl: "10m"					# Default lease time to live
-max_lease_ttl: "20m"					# Max lease time to live
-ssh_host: "ssh-host-signer"				# SSH host signining secret engine name
-host_max_lease_ttl: "87600h"				# SSH host signing max TTL
-hostrole_name: "hostrole"				# SSH host signing role name
+vault_addr: "{{ ansible_fqdn }}"			                # Vault listener address
+vault_port: 8200					                # Vault listener port
+vault_keysfile: "~/.hashicorp_vault_keys.json"		                # Local file storing master key shards
+vault_sshkeysignertokenfile: "~/.hashicorp_sshkeysigner_token.json"     # Local file storing sshkeysigner token
+ssh_client: "ssh-client-signer"				                # SSH client signining secret engine name
+sshrole_name: "sshrole"					                # SSH client signing role name
+default_user: "ansible"					                # SSH client signing default user
+def_lease_ttl: "10m"					                # Default lease time to live
+max_lease_ttl: "20m"					                # Max lease time to live
+ssh_host: "ssh-host-signer"				                # SSH host signining secret engine name
+host_max_lease_ttl: "87600h"				                # SSH host signing max TTL
+hostrole_name: "hostrole"				                # SSH host signing role name
 allowed_domains: "localdomain,example.com"
 ```
 

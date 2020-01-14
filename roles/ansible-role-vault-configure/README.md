@@ -28,7 +28,6 @@ vault_group: "vault"									# Group for vault user
 vault_keysfile: "~/.hashicorp_vault_keys.json"						# Local file storing master key shards
 vault_admintokenfile: "~/.hashicorp_admin_token.json"					# Local file storing admin token
 vault_provisionertokenfile: "~/.hashicorp_provisioner_token.json"			# Local file storing provisioner token
-vault_sshkeysignertokenfile: "~/.hashicorp_sshkeysigner_token.json"                     # Local file storing sshkeysigner token
 audit_path: "/var/log/vault"								# Audit log file directory
 ```
 

@@ -36,7 +36,6 @@
     policies:
       - "admin"
       - "provisioner"
-      - "sshkeysigner"
     policy_file: "policy-{{ item }}.hcl"
   uri:
     url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/{{ item }}"
@@ -65,6 +64,7 @@
     return_content: yes
     status_code: 200
   become: no
+  no_log: yes
   register: admin_token
   run_once: yes
 
@@ -72,7 +72,6 @@
   vars:
     policies:
       - "provisioner"
-      - "sshkeysigner"
   uri:
     url: "https://{{ vault_addr }}:{{ vault_port }}/v1/auth/token/create"
     validate_certs: no
@@ -85,6 +84,7 @@
     return_content: yes
     status_code: 200
   become: no
+  no_log: yes
   register: management_tokens
   run_once: yes
   loop: "{{ policies }}"
@@ -101,5 +101,4 @@
   loop:
     - [ "{{ admin_token['json'] }}", "{{ vault_admintokenfile }}" ]
     - [ "{{ management_tokens['results'] | selectattr('item', 'equalto', 'provisioner') | map(attribute='json') | list | first }}", "{{ vault_provisionertokenfile }}" ]
-    - [ "{{ management_tokens['results'] | selectattr('item', 'equalto', 'sshkeysigner') | map(attribute='json') | list | first }}", "{{ vault_sshkeysignertokenfile }}" ]
 
