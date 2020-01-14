@@ -1,5 +1,4 @@
 ---
-# tasks file for ansible-role-vault-configure
 
 - name: Create audit log directory
   file:
@@ -32,34 +31,27 @@
   # Don't fail if "path is already in use" message appears
   failed_when: "result.status != 204 and 'path already in use' not in result.content"
 
-- name: Create admin policy
+- name: Create vault policies
+  vars:
+    policies:
+      - "admin"
+      - "provisioner"
+      - "sshkeysigner"
+    policy_file: "policy-{{ item }}.hcl"
   uri:
-    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/admin"
+    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/{{ item }}"
     validate_certs: no
     method: PUT
     headers:
       X-Vault-Token: "{{ vault_keys['root_token'] }}"
-# This simple line took me 2 days to get working, I felt that needed mentioning!
-    body: { "policy": "{{ lookup('file','policy-admin.hcl') }}" }
+    # This simple line took me 2 days to get working, I felt that needed mentioning!
+    body: { "policy": "{{ lookup('file', policy_file) }}" }
     body_format: json
     return_content: yes
     status_code: 204
   become: no
   run_once: yes
-
-- name: Create provisioner policy
-  uri:
-    url: "https://{{ vault_addr }}:{{ vault_port }}/v1/sys/policy/provisioner"
-    validate_certs: no
-    method: PUT
-    headers:
-      X-Vault-Token: "{{ vault_keys['root_token'] }}"
-    body: { "policy": "{{ lookup('file','policy-provisioner.hcl') }}" }
-    body_format: json
-    return_content: yes
-    status_code: 204
-  become: no
-  run_once: yes
+  loop: "{{ policies }}"
 
 - name: Create and capture admin token
   uri:
@@ -76,21 +68,26 @@
   register: admin_token
   run_once: yes
 
-- name: Create and capture provisioner token
+- name: Create and capture management tokens
+  vars:
+    policies:
+      - "provisioner"
+      - "sshkeysigner"
   uri:
     url: "https://{{ vault_addr }}:{{ vault_port }}/v1/auth/token/create"
     validate_certs: no
     method: POST
     headers:
-# Use the newly created admin token to create the provisioner policy
+      # Use the newly created admin token to create the provisioner policy
       X-Vault-Token: "{{ admin_token['json']['auth']['client_token'] }}"
-    body: '{ "policies": "provisioner" }'
+    body: '{ "policies": "{{ item }}" }'
     body_format: json
     return_content: yes
     status_code: 200
   become: no
-  register: provisioner_token
+  register: management_tokens
   run_once: yes
+  loop: "{{ policies }}"
 
 - name: Save tokens locally
   copy:
@@ -100,8 +97,9 @@
   delegate_to: localhost
   become: no
   no_log: yes
-  with_list:
-    - [ "{{ admin_token['json'] }}", "{{ vault_admintokenfile }}" ]
-    - [ "{{ provisioner_token['json'] }}", "{{ vault_provisionertokenfile }}" ]
   run_once: yes
+  loop:
+    - [ "{{ admin_token['json'] }}", "{{ vault_admintokenfile }}" ]
+    - [ "{{ management_tokens['results'] | selectattr('item', 'equalto', 'provisioner') | map(attribute='json') | list | first }}", "{{ vault_provisionertokenfile }}" ]
+    - [ "{{ management_tokens['results'] | selectattr('item', 'equalto', 'sshkeysigner') | map(attribute='json') | list | first }}", "{{ vault_sshkeysignertokenfile }}" ]
 
