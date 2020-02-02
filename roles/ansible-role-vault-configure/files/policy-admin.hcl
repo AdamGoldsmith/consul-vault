@@ -28,7 +28,7 @@ path "secret/*"
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-# Manage and manage secret engines broadly across Vault.
+# Create and manage secret engines broadly across Vault.
 path "sys/mounts/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
