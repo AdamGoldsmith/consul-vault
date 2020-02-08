@@ -69,6 +69,12 @@ or
 Known Issues
 ------------
 
+* __deploy.sh__
+
+The `deploy.sh` script has been updated to use `/bin/bash` which might not be universally available on your system so you may need to update this to use the shell of your choice.
+
+* __PyOpenSSL__
+
 If you get the message "You need to have PyOpenSSL>=0.15 to generate CSRs", then it is most likely an issue with the OpenSSL package that python has imported. When pyOpenSSL is installed/upgraded via the PIP Ansible module in this playbok, it will install the python package under /usr/lib/pythonx.x/site-packages, however it is possible that another OpenSSL python package could be installed under /usr/lib64/pythonx.x/site-packages that is being loaded in preference to the higher-level package.  
 In order to prevent this happening, temporarily move the directory "/usr/lib64/pythonx.x/site-packages/OpenSSL" out of the way while running this playbook.  
 
