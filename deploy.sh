@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 scriptname=$(basename $0)
 USAGE="Usage : ${scriptname} [-s <service>] [-t tag1,tag2,tag3] [-n] [-h]"
