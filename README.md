@@ -3,7 +3,7 @@ Hashicorp vault & consul cluster
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Installs & confgures Hashicorp's Consul & Vault + HAProxy to run as an HA cluster
+Installs & configures Hashicorp's Consul & Vault + HAProxy to run as an HA cluster
 
 ### Symbolic representation overview of deployment
 ![Alt text](/images/Vault-Consul-Cluster.jpg "Overview of deployment")
