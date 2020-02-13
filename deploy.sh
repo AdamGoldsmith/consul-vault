@@ -1,11 +1,11 @@
 #!/bin/bash
 
-scriptname=$(basename $0)
+scriptname=$(basename "$0")
 USAGE="Usage : ${scriptname} [-s <service>] [-t tag1,tag2,tag3] [-n] [-h]"
 HELP="Deploy, manage or destroy HA consul + vault environment.
 
 ${USAGE}\n
-  -s = Service name [consul|vault] (Optional - both if omitted)
+  -s = Service name [consul|vault|haproxy] (Optional - all if omitted)
   -t = Tags [tag1,tag2,tag3] (Optional - all necessary tags for full deployment if omitted)
   -n = No execution, just display the ansible command that would run
   -h = Show usage
@@ -36,13 +36,14 @@ do
   s)    service=${OPTARG};;
   t)	tags=${OPTARG:-};;
   n)	norun=1;;
-  h)    printf "\n${HELP}\n"; exit;;
-  \?)   printf "\nBad usage!\n${USAGE}\n"; exit 1;;
+  h)	printf "\n%s\n" "${HELP}"; exit;;
+  \?)	printf "\nBad usage!\n\n%s\n\n" "${USAGE}"; exit 1;;
   esac
 done 2>/dev/null
 
-cmd="ansible-playbook playbooks/${service:-site}.yml --tags '${tags:-epel,install,init,unseal,configure,approle,sshkeysign}'"
+[[ -n "${tags}" ]] && cmd_tags=" --tags ${tags}"
+cmd="ansible-playbook playbooks/${service:-site}.yml${cmd_tags}"
 
-printf "\n${cmd}\n"
-[[ -z ${norun} ]] && eval ${cmd} || printf "\n"
+printf "\n%s\n" "${cmd}"
+[[ -z ${norun} ]] && eval "${cmd}" || printf "\n"
 

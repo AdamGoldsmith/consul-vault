@@ -43,6 +43,7 @@ Running the deployment
 
 ```
 cd vagrant
+export BOX_NAME="centos/7"     # Optional (defaults to debian/stretch64)
 vagrant up
 ```
 
@@ -54,7 +55,7 @@ __To deploy__
 
 or
 
-`ansible-playbook playbooks/site.yml --tags 'epel,install,init,unseal,configure,approle,sshkeysign'`
+`ansible-playbook playbooks/site.yml`
 
 __To remove__
 
