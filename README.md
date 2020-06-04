@@ -5,11 +5,13 @@ Hashicorp vault & consul cluster
 
 Installs & configures Hashicorp's Consul & Vault + HAProxy to run as an HA cluster
 
+>__Note__: *Please see [this repo](https://github.com/AdamGoldsmith/cloud-gitlab) for a similar project that uses the latest integrated storage backend made available in Vault 1.4 release, removing the need for a Consul-based backend storage deployment*
+
 ### Symbolic representation overview of deployment
-![Alt text](/images/Vault-Consul-Cluster.jpg "Overview of deployment")
+![Alt text](images/Vault-Consul-Cluster.jpg "Overview of deployment")
 
 ### Consul UI Dashboard
-[![Alt text](/images/Consul-Vault-UI.jpg "Consul UI Dashboard")](https://www.consul.io/docs/index.html)
+[![Alt text](images/Consul-Vault-UI.jpg "Consul UI Dashboard")](https://www.consul.io/docs/index.html)
 
 Although the vault installation creates OpenSSL TLS private key, CSR & resultant certificate, the URI modules in these roles currently use "validate_certs: no". It is up to you to complete the TLS configuration.
 
