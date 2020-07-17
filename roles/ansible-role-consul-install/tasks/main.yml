@@ -21,7 +21,9 @@
 
     - name: Setting consul download URL
       set_fact:
-        consul_download: "{{ consul_data.json.current_download_url.split('/')[0:-2]|join('/') }}/{{ consul_version }}/"
+        consul_download: "{{ (consul_data.json.current_download_url |
+          regex_replace('\\/$', '')).split('/')[0:-1] |
+          join('/') }}/{{ consul_version }}/"
 
     - name: Getting consul chksums
       uri:
